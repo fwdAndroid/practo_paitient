@@ -1,19 +1,38 @@
 // import 'package:college_meet/Screens/authphone/selectinterest.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:practo_paitient/bottom.dart';
+import 'package:practo_paitient/database/databasemethods.dart';
 import 'package:practo_paitient/profile/profile.dart';
 
 import 'continuephone.dart';
 
 class VerifyPhone extends StatefulWidget {
-  const VerifyPhone({Key? key}) : super(key: key);
+  final String phone;
+  final String codeDigits;
+  const VerifyPhone({Key? key, required this.codeDigits, required this.phone})
+      : super(key: key);
 
   @override
   State<VerifyPhone> createState() => _VerifyPhoneState();
 }
 
 class _VerifyPhoneState extends State<VerifyPhone> {
+  final GlobalKey<ScaffoldState> _scalfoldkey = GlobalKey<ScaffoldState>();
+  final TextEditingController controllerpin = TextEditingController();
+  final FocusNode pinOTPFocusNode = FocusNode();
+
+  String? verificationCode;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    verificationPhone();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,19 +57,39 @@ class _VerifyPhoneState extends State<VerifyPhone> {
           SizedBox(
             height: 6,
           ),
-          Text("Code has been sent to +234 80******56"),
+          Text("verification: ${widget.codeDigits}-${widget.phone}"),
           SizedBox(height: 50),
           Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 30),
               child: PinCodeTextField(
+                focusNode: pinOTPFocusNode,
+                controller: controllerpin,
                 appContext: context,
                 pastedTextStyle: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
-                length: 4,
-
+                length: 6,
+                onSubmitted: (pin) async {
+                  try {
+                    await FirebaseAuth.instance
+                        .signInWithCredential(PhoneAuthProvider.credential(
+                            verificationId: verificationCode!, smsCode: pin))
+                        .then((value) {
+                      if (value.user != null) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (builder) => MobileScreenLayout()));
+                      }
+                    });
+                  } catch (e) {
+                    FocusScope.of(context).unfocus();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Invalide Code"),
+                      duration: Duration(seconds: 12),
+                    ));
+                  }
+                },
                 animationType: AnimationType.fade,
                 validator: (v) {
                   if (v!.length < 3) {
@@ -61,26 +100,17 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                 },
                 pinTheme: PinTheme(),
                 animationDuration: const Duration(milliseconds: 300),
-                // errorAnimationController: errorController,
-                // controller: textEditingController,
+              
                 keyboardType: TextInputType.number,
-                // boxShadows: const [
-                //   BoxShadow(
-                //     offset: Offset(0, 1),
-                //     color: Colors.black12,
-                //     blurRadius: 10,
-                //   )
-                // ],
+                
                 onCompleted: (v) {
                   debugPrint("Completed");
                 },
-                // onTap: () {
-                //   print("Pressed");
-                // },
+
                 onChanged: (value) {
                   debugPrint(value);
                   setState(() {
-                    // currentText = value;
+                   
                   });
                 },
                 beforeTextPaste: (text) {
@@ -107,5 +137,49 @@ class _VerifyPhoneState extends State<VerifyPhone> {
         ],
       ),
     );
+  }
+  
+  void verificationPhone() async {
+    await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: "${widget.codeDigits + widget.phone}",
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await FirebaseAuth.instance
+              .signInWithCredential(credential)
+              .then((value) {
+            if (value.user != null) {
+              // Customdialog.showDialogBox(context);
+              addPhone();
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (builder) => Profile(),
+                ),
+              );
+              // Customdialog.closeDialog(context);
+            } else {}
+          });
+        },
+        verificationFailed: (FirebaseException e) {
+          FocusScope.of(context).unfocus();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(e.message.toString()),
+            duration: Duration(seconds: 12),
+          ));
+        },
+        codeSent: (String VID, int? resentToken) {
+          setState(() {
+            verificationCode = VID;
+          });
+        },
+        codeAutoRetrievalTimeout: (String VID) {
+          setState(() {
+            verificationCode = VID;
+          });
+        },
+        timeout: Duration(seconds: 50));
+  }
+
+  void addPhone() async {
+    await DatabaseMethods().numberAdd();
+    // .then((value) => Customdialog.closeDialog(context));
   }
 }
