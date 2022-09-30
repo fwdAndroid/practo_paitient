@@ -88,7 +88,7 @@ class _ProfileState extends State<Profile> {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     width: 374,
-                    height: 117,
+                    height: 157,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
