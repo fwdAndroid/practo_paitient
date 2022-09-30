@@ -1,7 +1,9 @@
 // import 'package:college_meet/BottomNavigatonBar/Screens/Edit%20Profile/edit_profile.dart'
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:practo_paitient/auth/continuephone.dart';
 import 'package:practo_paitient/notification/notifications.dart';
 
 class Profile extends StatelessWidget {
@@ -177,7 +179,14 @@ class Profile extends StatelessWidget {
               indent: 15,
               endIndent: 15,
             ),
-            zisttile('Logout', Icons.login_outlined, () {})
+            zisttile('Logout', Icons.login_outlined, () async {
+              await FirebaseAuth.instance.signOut().then((value) => {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => ContinuePhone()))
+                  });
+            })
           ],
         ),
       ),

@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:practo_paitient/bottom.dart';
 import 'package:practo_paitient/splash.dart';
 
 Future<void> main() async {
@@ -30,7 +34,9 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const Splash(),
+      home: FirebaseAuth.instance.currentUser == null
+          ? const Splash()
+          : MobileScreenLayout(),
     );
   }
 }
