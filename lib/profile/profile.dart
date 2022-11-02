@@ -104,7 +104,7 @@ class _ProfileState extends State<Profile> {
                         children: [
                           _image != null
                               ? CircleAvatar(
-                                  radius: 59,
+                                  radius: 60,
                                   backgroundImage: MemoryImage(_image!))
                               : Image.asset(
                                   "asset/cam.png",
@@ -138,10 +138,6 @@ class _ProfileState extends State<Profile> {
                               ),
                             ),
                           ),
-                          Text(
-                            "Upload photo profile",
-                            style: TextStyle(color: Colors.grey),
-                          )
                         ],
                       ),
                     ),

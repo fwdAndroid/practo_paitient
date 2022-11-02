@@ -2,10 +2,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:practo_paitient/auth/continuephone.dart';
 import 'package:practo_paitient/notification/notifications.dart';
+import 'package:practo_paitient/profile/edit_setting.dart';
 
 class Setting extends StatelessWidget {
   const Setting({Key? key}) : super(key: key);
@@ -136,8 +135,8 @@ class Setting extends StatelessWidget {
             ),
             // ListTile()
             zisttile('Edit Setting', Icons.person, () {
-              // Navigator.push(context,
-              //     MaterialPageRoute(builder: (builder) => Edit_Setting()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (builder) => Edit_Setting()));
             }),
             Divider(
               color: Colors.grey,
