@@ -5,9 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:practo_paitient/auth/continuephone.dart';
 import 'package:practo_paitient/notification/notifications.dart';
 import 'package:practo_paitient/profile/edit_setting.dart';
+import 'package:flutter_share/flutter_share.dart';
 
-class Setting extends StatelessWidget {
+class Setting extends StatefulWidget {
   const Setting({Key? key}) : super(key: key);
+
+  @override
+  State<Setting> createState() => _SettingState();
+}
+
+class _SettingState extends State<Setting> {
+  Future<void> share() async {
+    await FlutterShare.share(
+        title: 'Practo Paitient',
+        text: 'Hey: Its New App For Paitient',
+        linkUrl: 'https://play.google.com/store/apps/details',
+        chooserTitle: 'Hey: Its New App For Doctors');
+  }
+
   zisttile(String text, IconData icon, VoidCallback function) {
     return ListTile(
         leading: Container(
@@ -134,20 +149,32 @@ class Setting extends StatelessWidget {
               endIndent: 15,
             ),
             // ListTile()
-            zisttile('Edit Setting', Icons.person, () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (builder) => Edit_Setting()));
-            }),
+            InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => Edit_Setting()));
+              },
+              child: zisttile('Edit Setting', Icons.person, () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => Edit_Setting()));
+              }),
+            ),
             Divider(
               color: Colors.grey,
               thickness: 0.5,
               indent: 15,
               endIndent: 15,
             ),
-            zisttile('Notification', Icons.notifications, () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (builder) => Notifications()));
-            }),
+            InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => Notifications()));
+              },
+              child: zisttile('Notification', Icons.notifications, () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => Notifications()));
+              }),
+            ),
             Divider(
               color: Colors.grey,
               thickness: 0.5,
@@ -164,10 +191,14 @@ class Setting extends StatelessWidget {
               indent: 15,
               endIndent: 15,
             ),
-            zisttile('Invite Friends', Icons.people, () {
-              // Navigator.push(context,
-              //     MaterialPageRoute(builder: (builder) => Invite_Friends()));
-            }),
+            InkWell(
+                onTap: () async {
+                  await share();
+                },
+                child: zisttile('Invite Friends', Icons.people, () {
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (builder) => Invite_Friends()));
+                })),
             Divider(
               color: Colors.grey,
               thickness: 0.5,

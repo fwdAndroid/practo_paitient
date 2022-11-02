@@ -458,7 +458,7 @@ class _Edit_SettingState extends State<Edit_Setting> {
                               return null;
                             },
                             decoration: InputDecoration(
-                              hintText: document['gender'],
+                              hintText: document['address'],
                               contentPadding: EdgeInsets.only(
                                 left: 20,
                               ),
@@ -476,7 +476,7 @@ class _Edit_SettingState extends State<Edit_Setting> {
                       Center(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: Color(0xfff0092E1).withOpacity(.6),
+                            backgroundColor: Color(0xfff0092E1).withOpacity(.6),
                             fixedSize: const Size(350, 60),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(40)),
