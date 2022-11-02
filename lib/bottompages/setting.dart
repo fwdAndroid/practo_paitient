@@ -1,4 +1,5 @@
-// import 'package:college_meet/BottomNavigatonBar/Screens/Edit%20Profile/edit_profile.dart'
+// import 'package:college_meet/BottomNavigatonBar/Screens/Edit%20Setting/edit_Setting.dart'
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -6,8 +7,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:practo_paitient/auth/continuephone.dart';
 import 'package:practo_paitient/notification/notifications.dart';
 
-class Profile extends StatelessWidget {
-  const Profile({Key? key}) : super(key: key);
+class Setting extends StatelessWidget {
+  const Setting({Key? key}) : super(key: key);
   zisttile(String text, IconData icon, VoidCallback function) {
     return ListTile(
         leading: Container(
@@ -57,7 +58,7 @@ class Profile extends StatelessWidget {
           child: Image.asset("asset/Vector.png"),
         ),
         title: Text(
-          'Profile',
+          'Setting',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
         actions: [
@@ -84,51 +85,46 @@ class Profile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
-              child: Container(
-                height: 110,
-                // width: MediaQuery.of(context).size.width * 0.9,
-                // width: 100,
-                child: Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 55,
-                      backgroundImage: AssetImage('asset/doctor.png'),
-                    ),
-                    Positioned(
-                      top: 80,
-                      left: 80,
-                      // bottom: 20,
-                      child: Container(
-                        height: 10,
-                        width: 10,
-                        // width: 20,
-                        // height: 20,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.redAccent,
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("users")
+                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .snapshots(),
+                  builder: (context, AsyncSnapshot snapshot) {
+                    if (!snapshot.hasData) {
+                      return new CircularProgressIndicator();
+                    }
+                    var document = snapshot.data;
+
+                    return Column(
+                      children: [
+                        Container(
+                          height: 110,
+                          child: Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: 55,
+                                backgroundImage:
+                                    NetworkImage(document['photoURL']),
+                              ),
+                            ],
+                          ),
                         ),
-                        child: Center(
-                          child: IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.edit,
-                                size: 15,
-                                color: Colors.white,
-                              )),
+                        SizedBox(
+                          height: 10,
                         ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+                        Text(
+                          document['name'],
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22),
+                        ),
+                      ],
+                    );
+                  }),
             ),
-            Text(
-              'Adam Smith',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22),
-            ),
+
             SizedBox(
               height: 20,
             ),
@@ -139,9 +135,9 @@ class Profile extends StatelessWidget {
               endIndent: 15,
             ),
             // ListTile()
-            zisttile('Edit Profile', Icons.person, () {
+            zisttile('Edit Setting', Icons.person, () {
               // Navigator.push(context,
-              //     MaterialPageRoute(builder: (builder) => Edit_Profile()));
+              //     MaterialPageRoute(builder: (builder) => Edit_Setting()));
             }),
             Divider(
               color: Colors.grey,

@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:practo_paitient/bottompages/appointment.dart';
 import 'package:practo_paitient/bottompages/chats/screens/chat_page.dart';
 import 'package:practo_paitient/bottompages/home.dart';
-import 'package:practo_paitient/bottompages/profile.dart';
+import 'package:practo_paitient/bottompages/setting.dart';
 
 const webScreenSize = 600;
 
@@ -17,7 +17,7 @@ List<Widget> homeScreenItems = [
   Home_Screen(),
   Appointment(),
   ChatPage(),
-  Profile(),
+  Setting(),
 
   // Profile()
   //  Random(),
