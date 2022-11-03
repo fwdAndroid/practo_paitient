@@ -100,18 +100,13 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                 },
                 pinTheme: PinTheme(),
                 animationDuration: const Duration(milliseconds: 300),
-              
                 keyboardType: TextInputType.number,
-                
                 onCompleted: (v) {
                   debugPrint("Completed");
                 },
-
                 onChanged: (value) {
                   debugPrint(value);
-                  setState(() {
-                   
-                  });
+                  setState(() {});
                 },
                 beforeTextPaste: (text) {
                   debugPrint("Allowing to paste $text");
@@ -138,7 +133,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
       ),
     );
   }
-  
+
   void verificationPhone() async {
     await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: "${widget.codeDigits + widget.phone}",
