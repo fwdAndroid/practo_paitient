@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:calender_picker/date_picker_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -5,7 +6,15 @@ import 'package:practo_paitient/doctors/appointment/confrim_appointment.dart';
 import 'package:practo_paitient/doctors/favourite_doctor.dart';
 
 class Doctor_Appointment extends StatefulWidget {
-  const Doctor_Appointment({Key? key}) : super(key: key);
+  String? id;
+  String? image;
+  String? name;
+  String? specialization;
+  String? description;
+
+  Doctor_Appointment(
+      {Key? key, this.id, this.image, this.specialization, this.name,this.description})
+      : super(key: key);
 
   @override
   State<Doctor_Appointment> createState() => _Doctor_AppointmentState();
@@ -23,7 +32,7 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
         automaticallyImplyLeading: false,
         elevation: 0,
         title: Text(
-          "Dr.Shang chi",
+          widget.name!,
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.white,
@@ -62,12 +71,14 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
                 child: Card(
                   elevation: 2,
                   child: ListTile(
-                      leading: Image.asset("asset/doctor.png"),
+                      leading: Image.network(
+                        widget.image!,
+                      ),
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Dr.Shang chi",
+                            widget.name!,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 14),
                           ),
@@ -84,7 +95,7 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
                         ],
                       ),
                       subtitle: Text(
-                        "Cardio Spacialist: Smithy London Hospital",
+                        widget.specialization!,
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 12),
                       )),
@@ -234,17 +245,18 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
                     fontSize: 16),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "A doctor is someone who is experienced and certified to practice medicine to help maintain or restore physical and mental health.A doctor is tasked with interacting with patients, diagnosing medical problems and successfully treating illness or injury.",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14),
-                textAlign: TextAlign.justify,
-              ),
-            ),
+             Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      widget.description!,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14),
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
@@ -296,8 +308,10 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
                   margin: EdgeInsets.only(bottom: 20),
                   child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (builder) => ConfrimAppointment()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => ConfrimAppointment()));
                       },
                       child: Text('Book Appointment'),
                       style: ElevatedButton.styleFrom(

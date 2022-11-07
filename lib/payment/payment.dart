@@ -140,7 +140,7 @@ class _PaymentState extends State<Payment> {
                                       builder: (builder) =>
                                           MobileScreenLayout()));
                             },
-                            child: Text('Apointment Complete'),
+                            child: Text('Wallet Added'),
                             style: ElevatedButton.styleFrom(
                                 shape: StadiumBorder(),
                                 primary: Color(0xfff0092E1),
