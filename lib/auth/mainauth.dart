@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:practo_paitient/auth/continuephone.dart';
+import 'package:practo_paitient/database/databasemethods.dart';
+import 'package:practo_paitient/profile/profile.dart';
 
 class MainAuth extends StatefulWidget {
   const MainAuth({Key? key}) : super(key: key);
@@ -59,10 +61,21 @@ class _MainAuthState extends State<MainAuth> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  "asset/google.png",
-                  width: 73,
-                  height: 71,
+                InkWell(
+                  onTap: () async {
+                    await DatabaseMethods().signInWithGoogle().then((value) => {
+                          DatabaseMethods().numberAdd(),
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (_) => Profile()),
+                              (route) => false)
+                        });
+                  },
+                  child: Image.asset(
+                    "asset/google.png",
+                    width: 73,
+                    height: 71,
+                  ),
                 ),
                 SizedBox(
                   width: 10,

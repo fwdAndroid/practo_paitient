@@ -11,9 +11,16 @@ class Doctor_Appointment extends StatefulWidget {
   String? name;
   String? specialization;
   String? description;
+  String? experience;
 
   Doctor_Appointment(
-      {Key? key, this.id, this.image, this.specialization, this.name,this.description})
+      {Key? key,
+      this.id,
+      this.image,
+      this.specialization,
+      this.name,
+      this.experience,
+      this.description})
       : super(key: key);
 
   @override
@@ -176,7 +183,7 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
                                 height: 5,
                               ),
                               Text(
-                                "15+",
+                                widget.experience!,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xff1060D7),
@@ -245,18 +252,17 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
                     fontSize: 16),
               ),
             ),
-             Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      widget.description!,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14),
-                      textAlign: TextAlign.justify,
-                    ),
-                  ),
-                
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                widget.description!,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14),
+                textAlign: TextAlign.justify,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
