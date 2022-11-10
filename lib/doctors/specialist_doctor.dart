@@ -44,6 +44,8 @@ class _Specialist_DoctorState extends State<Specialist_Doctor> {
                               name: data['doctorName'],
                               specialization: data['doctorSpecialization'],
                               image: data['doctorPhotoURL'],
+                              address: data['doctorAddres'],
+                              images: data['doctorCertificationImages'],
                               description: data['doctorDesc'])));
                 },
                 leading: CircleAvatar(

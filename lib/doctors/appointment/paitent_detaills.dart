@@ -4,7 +4,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:practo_paitient/payment/payment.dart';
 
 class PaitnetsDetails extends StatefulWidget {
-  const PaitnetsDetails({Key? key}) : super(key: key);
+  var id;
+   PaitnetsDetails({Key? key, required this.id}) : super(key: key);
 
   @override
   State<PaitnetsDetails> createState() => _PaitnetsDetailsState();
@@ -219,10 +220,8 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                 margin: EdgeInsets.only(bottom: 20),
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (builder) => Payment()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (builder) => Payment()));
                     },
                     child: Text('Confrim & Pay'),
                     style: ElevatedButton.styleFrom(

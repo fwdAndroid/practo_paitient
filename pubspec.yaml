@@ -30,6 +30,7 @@ dependencies:
   booking_calendar: ^1.1.6
   bottom_navy_bar: ^6.0.0
   calender_picker: ^1.0.7
+  carousel_slider: ^4.1.1
   cloud_firestore: ^3.5.0
   country_code_picker: ^2.0.2
   cupertino_icons: ^1.0.2
@@ -41,13 +42,19 @@ dependencies:
   flutter_credit_card: ^3.0.4
   flutter_rating_bar: ^4.0.1
   flutter_share: ^2.0.0
+  flutter_tabler_icons: ^1.1.2
   form_field_validator: ^1.1.0
   google_fonts: ^3.0.1
+  google_nav_bar: ^5.0.6
   google_sign_in: ^5.4.2
   image_picker: ^0.8.5+3
   intl_phone_field: ^3.1.0
+  introduction_screen: ^3.0.2
   phone_form_field: ^7.0.2
   pin_code_fields: ^7.4.0
+  quick_actions: ^1.0.1
+  typicons_flutter: ^0.5.0
+  url_launcher: ^6.1.6
   uuid: ^3.0.6
 
 dev_dependencies:

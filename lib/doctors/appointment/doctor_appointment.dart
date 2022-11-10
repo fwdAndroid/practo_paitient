@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:calender_picker/date_picker_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:practo_paitient/doctors/appointment/confrim_appointment.dart';
+import 'package:practo_paitient/doctors/appointment/paitent_detaills.dart';
 import 'package:practo_paitient/doctors/favourite_doctor.dart';
 
 class Doctor_Appointment extends StatefulWidget {
@@ -12,6 +15,8 @@ class Doctor_Appointment extends StatefulWidget {
   String? specialization;
   String? description;
   String? experience;
+  String? address;
+  List<dynamic>? images;
 
   Doctor_Appointment(
       {Key? key,
@@ -20,6 +25,8 @@ class Doctor_Appointment extends StatefulWidget {
       this.specialization,
       this.name,
       this.experience,
+      this.address,
+      this.images,
       this.description})
       : super(key: key);
 
@@ -29,7 +36,7 @@ class Doctor_Appointment extends StatefulWidget {
 
 class _Doctor_AppointmentState extends State<Doctor_Appointment> {
   DateTime dateTime = DateTime.now();
-
+  var sss;
   int days = 10;
   @override
   Widget build(BuildContext context) {
@@ -266,7 +273,7 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Working Time",
+                "Doctor Specialization",
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -276,7 +283,7 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Mon 12.00 AM TO  FRI 12.00 PM",
+                widget.specialization!,
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w500,
@@ -287,22 +294,52 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Make Appointment",
+                "Address",
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 16),
               ),
             ),
-            CalenderPicker(
-              dateTime,
-              daysCount: days,
-              // ignore: avoid_print
-              enableMultiSelection: true,
-              // ignore: avoid_print
-              multiSelectionListener: (value) => print(value),
-              selectionColor: const Color(0XFF0342E9),
-              selectedTextColor: Colors.white,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                widget.address!,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14),
+                textAlign: TextAlign.justify,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Doctor Certificates",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+              ),
+            ),
+            Container(
+              height: 210,
+              padding: EdgeInsets.all(4),
+              child: GridView.builder(
+                  itemCount: widget.images!.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3),
+                  itemBuilder: (context, index) {
+                    return Container(
+                      height: 210,
+                      margin: EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          image: DecorationImage(
+                              image: NetworkImage(widget.images![index]),
+                              fit: BoxFit.cover)),
+                    );
+                  }),
             ),
             SizedBox(
               height: 20,
@@ -317,7 +354,10 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (builder) => ConfrimAppointment()));
+                                builder: (builder) => PaitnetsDetails(
+                                      id: FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                    )));
                       },
                       child: Text('Book Appointment'),
                       style: ElevatedButton.styleFrom(
