@@ -1,18 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter/src/widgets/basic.dart';
+import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:practo_paitient/doctors/appointment/doctor_appointment.dart';
 
-class UpComing extends StatefulWidget {
-  const UpComing({Key? key}) : super(key: key);
+class Pending extends StatefulWidget {
+  const Pending({super.key});
 
   @override
-  State<UpComing> createState() => _UpComingState();
+  State<Pending> createState() => _PendingState();
 }
 
-class _UpComingState extends State<UpComing> {
+class _PendingState extends State<Pending> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +26,7 @@ class _UpComingState extends State<UpComing> {
                     //   'status',
                     //   isNotEqualTo: 'pending',
                     // )
-                    .where('status', isEqualTo: "upcomming")
+                    .where('status', isEqualTo: "pending")
                     .snapshots(),
                 builder: (context,
                     AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
@@ -69,6 +70,7 @@ class _UpComingState extends State<UpComing> {
                                       },
                                       title: Text(snap['name']),
                                       subtitle: Text(snap['phoneNumber']),
+                                      trailing: Text(snap['status']),
                                     ),
                                     Divider()
                                   ],

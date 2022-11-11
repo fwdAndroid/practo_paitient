@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:practo_paitient/tab/past_appointment.dart';
+import 'package:practo_paitient/tab/pending_appointment.dart';
 import 'package:practo_paitient/tab/upcomming_appointment.dart';
 
 class Appointment extends StatefulWidget {
@@ -17,7 +18,7 @@ class _AppointmentState extends State<Appointment>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -42,12 +43,15 @@ class _AppointmentState extends State<Appointment>
             Tab(
               text: 'Past',
             ),
+              Tab(
+              text: 'Pending',
+            ),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const <Widget>[UpComing(), Past()],
+        children: const <Widget>[UpComing(), Past(),Pending()],
       ),
     );
   }
