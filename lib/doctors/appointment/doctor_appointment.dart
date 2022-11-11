@@ -359,7 +359,7 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
                                           .instance.currentUser!.uid,
                                     )));
                       },
-                      child: Text('Book Appointment'),
+                      child: Text('Make Appointment'),
                       style: ElevatedButton.styleFrom(
                           shape: StadiumBorder(),
                           primary: Color(0xfff0092E1),

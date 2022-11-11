@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:practo_paitient/database/storage_methods.dart';
+import 'package:practo_paitient/models/appointment_model.dart';
 import 'package:practo_paitient/models/profile_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -87,6 +88,44 @@ class DatabaseMethods {
             .collection('users')
             .doc(uid)
             .update(userModel.toJson());
+        res = 'success';
+      }
+    } catch (e) {
+      res = e.toString();
+    }
+    return res;
+  }
+
+  //Appointment
+  Future<String> makeAppointment({
+    required name,
+    required age,
+    required problem,
+    required gender,
+    required date,
+    required time,
+    required phoneNumber,
+    required uid,
+  }) async {
+    String res = 'Some error occured';
+
+    try {
+      if (gender.isNotEmpty || date.isNotEmpty || age) {
+        Appointmentmodel userModel = Appointmentmodel(
+          medicalRecordsImages: [],
+          id: uid,
+          name: name,
+          status: "pending",
+          age: age,
+          problem: problem,
+          date: date,
+          time: time,
+          phoneNumber: phoneNumber,
+        );
+        await firebaseFirestore
+            .collection('appointments')
+            .doc(uid)
+            .set(userModel.toJson());
         res = 'success';
       }
     } catch (e) {
