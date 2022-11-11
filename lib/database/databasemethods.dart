@@ -106,6 +106,7 @@ class DatabaseMethods {
     required time,
     required phoneNumber,
     required uid,
+   
   }) async {
     String res = 'Some error occured';
 
@@ -114,6 +115,7 @@ class DatabaseMethods {
         Appointmentmodel userModel = Appointmentmodel(
           medicalRecordsImages: [],
           id: uid,
+          
           name: name.toString(),
           status: "pending",
           age: age.toString(),

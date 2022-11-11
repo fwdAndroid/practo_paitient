@@ -8,6 +8,7 @@ class Appointmentmodel {
   final String name;
   final String age;
   final String date;
+  // final String doctorid;
   final String time;
   final String phoneNumber;
   List<String>? medicalRecordsImages;
@@ -17,6 +18,7 @@ class Appointmentmodel {
       required this.id,
       required this.problem,
       required this.name,
+      // required this.doctorid,
       required this.age,
       required this.date,
       required this.time,
@@ -30,14 +32,14 @@ class Appointmentmodel {
         'problem': problem,
         'name': name,
         'age': age,
+        // 'doctorid': doctorid,
         'date': date,
         'time': time,
         'medicalRecordsImages': medicalRecordsImages,
         'phoneNumber': phoneNumber,
       };
 
-  
-   static Appointmentmodel fromSnap(DocumentSnapshot snaps) {
+  static Appointmentmodel fromSnap(DocumentSnapshot snaps) {
     var snapshot = snaps.data() as Map<String, dynamic>;
 
     return Appointmentmodel(
@@ -48,6 +50,7 @@ class Appointmentmodel {
       age: snapshot['age'],
       date: snapshot['date'],
       time: snapshot['time'],
+      // doctorid: snapshot['doctorid'],
       phoneNumber: snapshot['phoneNumber'],
       medicalRecordsImages: [],
     );

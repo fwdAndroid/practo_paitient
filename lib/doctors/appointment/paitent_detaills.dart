@@ -23,6 +23,10 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
   TextEditingController timeinput = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
+
   bool _isLoading = false;
 
   @override
@@ -49,34 +53,44 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(4.0),
                   child: Text(
                     "Full Name",
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                        fontSize: 18),
+                        fontSize: 14),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    snap['name'] ??
-                        FirebaseAuth.instance.currentUser!.displayName,
+                  padding: const EdgeInsets.all(4.0),
+                  child: TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      hintText: snap['name'] ?? Text("No"),
+                      hintStyle: TextStyle(color: Colors.grey),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      ),
+                    ),
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(4.0),
                   child: Text(
                     "Paitent Age",
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                        fontSize: 18),
+                        fontSize: 14),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(4.0),
                   child: TextFormField(
                     controller: age,
                     keyboardType: TextInputType.number,
@@ -90,71 +104,91 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(4.0),
                   child: Row(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(4.0),
                         child: Text(
                           "Phone Number:",
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                              fontSize: 14),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          snap['phoneNumber'] ?? Text("No"),
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: TextField(
+                            controller: phoneController,
+                            decoration: InputDecoration(
+                              hintText: snap['phoneNumber'] ?? Text("No"),
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                              ),
+                            ),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14),
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(4.0),
                   child: Row(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(4.0),
                         child: Text(
                           "Gender:",
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                              fontSize: 14),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          snap['gender'],
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: TextField(
+                            controller: genderController,
+                            decoration: InputDecoration(
+                              hintText: snap['gender'] ?? Text("No"),
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                              ),
+                            ),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14),
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(4.0),
                   child: Text(
                     "Write Your Problem:",
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                        fontSize: 18),
+                        fontSize: 14),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(4.0),
                   child: TextFormField(
                     controller: problem,
                     minLines: 2,
@@ -177,7 +211,7 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                           timeController, //editing controller of this TextField
                       decoration: InputDecoration(
                           icon: Icon(Icons.timer), //icon of text field
-                          labelText: "Enter Time" //label text of field
+                          hintText: "Enter Time" //hint text of field
                           ),
                       readOnly:
                           true, //set it true, so that user will not able to edit text
@@ -210,7 +244,7 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 6,
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 10, right: 10),
@@ -220,7 +254,7 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                       //editing controller of this TextField
                       decoration: InputDecoration(
                           icon: Icon(Icons.calendar_today), //icon of text field
-                          labelText: "Select Date" //label text of field
+                          hintText: "Select Date" //hint text of field
                           ),
                       readOnly: true,
                       //set it true, so that user will not able to edit text
@@ -250,10 +284,10 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                 ),
                 Spacer(),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(4.0),
                   child: Center(
                     child: Container(
-                      margin: EdgeInsets.only(bottom: 20),
+                      margin: EdgeInsets.only(bottom: 10),
                       child: ElevatedButton(
                           onPressed: makeAppointment,
                           child: _isLoading == true
@@ -279,15 +313,18 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
       _isLoading = true;
     });
     String res = await DatabaseMethods().makeAppointment(
-      time: timeController.text,
-      date: dateController.text,
-      problem: problem.text,
-      age: age.text,
-      name: ['name'],
-      gender: ['gender'],
-      phoneNumber: ['phoneNumber'],
-      uid: FirebaseAuth.instance.currentUser!.uid,
-    );
+        time: timeController.text,
+        date: dateController.text,
+        problem: problem.text,
+        age: age.text,
+        name: nameController.text,
+        gender: genderController.text,
+        phoneNumber: phoneController.text,
+        uid: FirebaseAuth.instance.currentUser!.uid,
+        // doctorid: FirebaseFirestore.instance
+        //     .collection("doctorProfile")
+        //     .doc(FirebaseAuth.instance.currentUser!.uid)
+        );
 
     print(res);
     setState(() {

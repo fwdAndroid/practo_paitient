@@ -213,7 +213,7 @@ class _MedicalRecordsState extends State<MedicalRecords> {
                       //   Navigator.pushNamed(
                       //       context, onBoardingPhotoVerificationScreenRoute);
                       // }
-                      if (_image.length >= 6) {
+                      if (_image.length <= 6) {
                         setState(() {
                           uploading = true;
                         });
@@ -271,7 +271,7 @@ class _MedicalRecordsState extends State<MedicalRecords> {
       });
       ref = firebase_storage.FirebaseStorage.instance
           .ref()
-          .child('medicalRecords/${Path.basename(img.path)}');
+          .child('medicalrecords/${Path.basename(img.path)}');
       await ref!.putFile(img).whenComplete(() async {
         await ref!.getDownloadURL().then((value) {
           FirebaseFirestore.instance
