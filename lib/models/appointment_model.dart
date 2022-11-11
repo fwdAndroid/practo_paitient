@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
@@ -12,7 +10,7 @@ class Appointmentmodel {
   final String date;
   final String time;
   final String phoneNumber;
-  final List? medicalRecordsImages;
+  List<String>? medicalRecordsImages;
 
   Appointmentmodel(
       {required this.status,
@@ -25,21 +23,21 @@ class Appointmentmodel {
       required this.phoneNumber,
       required this.medicalRecordsImages});
 
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'status': status,
-      'id': id,
-      'problem': problem,
-      'name': name,
-      'age': age,
-      'date': date,
-      'time': time,
-      'medicalRecordsImages': medicalRecordsImages,
-      'phoneNumber': phoneNumber
-    };
-  }
+  ///Converting OBject into Json Object
+  Map<String, dynamic> toJson() => {
+        'status': status,
+        'id': id,
+        'problem': problem,
+        'name': name,
+        'age': age,
+        'date': date,
+        'time': time,
+        'medicalRecordsImages': medicalRecordsImages,
+        'phoneNumber': phoneNumber,
+      };
 
-  static Appointmentmodel fromSnap(DocumentSnapshot snaps) {
+  
+   static Appointmentmodel fromSnap(DocumentSnapshot snaps) {
     var snapshot = snaps.data() as Map<String, dynamic>;
 
     return Appointmentmodel(

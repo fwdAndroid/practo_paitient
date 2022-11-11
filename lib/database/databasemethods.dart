@@ -114,17 +114,17 @@ class DatabaseMethods {
         Appointmentmodel userModel = Appointmentmodel(
           medicalRecordsImages: [],
           id: uid,
-          name: name,
+          name: name.toString(),
           status: "pending",
-          age: age,
-          problem: problem,
-          date: date,
-          time: time,
-          phoneNumber: phoneNumber,
+          age: age.toString(),
+          problem: problem.toString(),
+          date: date.toString(),
+          time: time.toString(),
+          phoneNumber: phoneNumber.toString(),
         );
         await firebaseFirestore
             .collection('appointments')
-            .doc(uid)
+            .doc(FirebaseAuth.instance.currentUser!.uid)
             .set(userModel.toJson());
         res = 'success';
       }
