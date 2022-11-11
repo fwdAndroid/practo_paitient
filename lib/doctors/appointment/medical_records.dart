@@ -271,14 +271,14 @@ class _MedicalRecordsState extends State<MedicalRecords> {
       });
       ref = firebase_storage.FirebaseStorage.instance
           .ref()
-          .child('images/${Path.basename(img.path)}');
+          .child('medicalRecords/${Path.basename(img.path)}');
       await ref!.putFile(img).whenComplete(() async {
         await ref!.getDownloadURL().then((value) {
           FirebaseFirestore.instance
-              .collection('doctorsprofile')
+              .collection('appointments')
               .doc(FirebaseAuth.instance.currentUser!.uid)
               .update({
-            'doctorCertificationImages': FieldValue.arrayUnion([value])
+            'medicalRecordsImages': FieldValue.arrayUnion([value])
           });
           // imgRef!.add({'url': value});
           i++;
