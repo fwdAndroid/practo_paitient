@@ -7,6 +7,7 @@ import 'package:practo_paitient/database/storage_methods.dart';
 import 'package:practo_paitient/models/appointment_model.dart';
 import 'package:practo_paitient/models/profile_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:uuid/uuid.dart';
 
 class DatabaseMethods {
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -106,16 +107,15 @@ class DatabaseMethods {
     required time,
     required phoneNumber,
     required uid,
-   
   }) async {
     String res = 'Some error occured';
 
     try {
       if (gender.isNotEmpty || date.isNotEmpty || age) {
+        var doctorID = Uuid().v1();
         Appointmentmodel userModel = Appointmentmodel(
           medicalRecordsImages: [],
           id: uid,
-          
           name: name.toString(),
           status: "pending",
           age: age.toString(),
@@ -126,7 +126,9 @@ class DatabaseMethods {
         );
         await firebaseFirestore
             .collection('appointments')
-            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .doc("details")
+            .collection(FirebaseAuth.instance.currentUser!.uid)
+            .doc(doctorID)
             .set(userModel.toJson());
         res = 'success';
       }
