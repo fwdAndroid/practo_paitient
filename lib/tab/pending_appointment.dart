@@ -22,6 +22,8 @@ class _PendingState extends State<Pending> {
             ? StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('appointments')
+                    .doc("details")
+                    .collection(FirebaseAuth.instance.currentUser!.uid)
                     // .where(
                     //   'status',
                     //   isNotEqualTo: 'pending',
