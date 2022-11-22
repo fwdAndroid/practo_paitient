@@ -10,7 +10,7 @@ import 'package:practo_paitient/payment/payment.dart';
 import 'package:practo_paitient/widgets/utils.dart';
 
 class PaitnetsDetails extends StatefulWidget {
-  var id;
+  final id;
   PaitnetsDetails({Key? key, required this.id}) : super(key: key);
 
   @override
@@ -44,8 +44,8 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
       ),
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection("users")
-              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .collection("doctorsprofile")
+              .doc(widget.id)
               .snapshots(),
           builder: (context, AsyncSnapshot snapshot) {
             var snap = snapshot.data;
@@ -67,7 +67,7 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                   child: TextField(
                     controller: nameController,
                     decoration: InputDecoration(
-                      hintText: snap['name'] ?? Text("No"),
+                      hintText: "Enter Name",
                       hintStyle: TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -123,7 +123,7 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                           child: TextField(
                             controller: phoneController,
                             decoration: InputDecoration(
-                              hintText: snap['phoneNumber'] ?? Text("No"),
+                              hintText: 'phoneNumber',
                               hintStyle: TextStyle(color: Colors.grey),
                               border: OutlineInputBorder(
                                 borderRadius:
@@ -160,7 +160,7 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                           child: TextField(
                             controller: genderController,
                             decoration: InputDecoration(
-                              hintText: snap['gender'] ?? Text("No"),
+                              hintText: 'Gender',
                               hintStyle: TextStyle(color: Colors.grey),
                               border: OutlineInputBorder(
                                 borderRadius:
@@ -192,7 +192,7 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                   child: TextFormField(
                     controller: problem,
                     minLines: 2,
-                    maxLines: 5,
+                    maxLines: 3,
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
                       hintText: 'Write Your Problem',
@@ -320,7 +320,7 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
       name: nameController.text,
       gender: genderController.text,
       phoneNumber: phoneController.text,
-      uid: FirebaseAuth.instance.currentUser!.uid,
+      uid: FirebaseAuth.instance.currentUser!.uid, doctorId: widget.id,
       // medicalRecords: []
       // doctorid: FirebaseFirestore.instance
       //     .collection("doctorProfile")

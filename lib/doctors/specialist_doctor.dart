@@ -40,7 +40,7 @@ class _Specialist_DoctorState extends State<Specialist_Doctor> {
                       MaterialPageRoute(
                           builder: (builder) => Doctor_Appointment(
                               experience: data['experience'],
-                              id: FirebaseAuth.instance.currentUser!.uid,
+                              id: data['uid'],
                               name: data['doctorName'],
                               specialization: data['doctorSpecialization'],
                               image: data['doctorPhotoURL'],

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:practo_paitient/bottompages/appointment.dart';
-import 'package:practo_paitient/doctors/appointment/appointment_detail.dart';
-
 class Past extends StatefulWidget {
   const Past({Key? key}) : super(key: key);
 
@@ -51,10 +49,10 @@ class _PastState extends State<Past> {
                   child: Card(
                     child: ListTile(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (builder) => Appointment_Detail()));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (builder) => Appointment_Detail()));
                         },
                         leading: Image.asset("asset/doctor.png"),
                         title: Column(

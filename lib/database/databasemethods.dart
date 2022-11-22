@@ -120,15 +120,16 @@ class DatabaseMethods {
     required date,
     required time,
     required phoneNumber,
+    required doctorId,
     required uid,
   }) async {
     String res = 'Some error occured';
 
     try {
       if (gender.isNotEmpty || date.isNotEmpty || age) {
-        var doctorID = Uuid().v1();
         Appointmentmodel userModel = Appointmentmodel(
           id: uid,
+          doctorid: doctorId.toString(),
           name: name.toString(),
           status: "pending",
           age: age.toString(),
@@ -137,11 +138,13 @@ class DatabaseMethods {
           time: time.toString(),
           phoneNumber: phoneNumber.toString(),
         );
+
+        var dooc = Uuid().v1();
         await firebaseFirestore
             .collection('appointments')
             .doc("details")
             .collection(FirebaseAuth.instance.currentUser!.uid)
-            .doc(doctorID)
+            .doc(dooc)
             .set(userModel.toJson());
         res = 'success';
       }

@@ -8,7 +8,7 @@ class Appointmentmodel {
   final String name;
   final String age;
   final String date;
-  // final String doctorid;
+  final String? doctorid;
   final String time;
   final String phoneNumber;
 
@@ -17,7 +17,7 @@ class Appointmentmodel {
       required this.id,
       required this.problem,
       required this.name,
-      // required this.doctorid,
+     required this.doctorid,
       required this.age,
       required this.date,
       required this.time,
@@ -31,7 +31,7 @@ class Appointmentmodel {
         'problem': problem,
         'name': name,
         'age': age,
-        // 'doctorid': doctorid,
+        'doctorid': doctorid,
         'date': date,
         'time': time,
         'phoneNumber': phoneNumber,
@@ -42,13 +42,13 @@ class Appointmentmodel {
 
     return Appointmentmodel(
       status: snapshot['status'],
+      doctorid: snapshot['doctorid'],
       id: snapshot['id'],
       problem: snapshot['problem'],
       name: snapshot['name'],
       age: snapshot['age'],
       date: snapshot['date'],
       time: snapshot['time'],
-      // doctorid: snapshot['doctorid'],
       phoneNumber: snapshot['phoneNumber'],
     );
   }

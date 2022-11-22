@@ -355,14 +355,13 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
                             context,
                             MaterialPageRoute(
                                 builder: (builder) => PaitnetsDetails(
-                                      id: FirebaseAuth
-                                          .instance.currentUser!.uid,
+                                      id: widget.id
                                     )));
                       },
                       child: Text('Make Appointment'),
                       style: ElevatedButton.styleFrom(
                           shape: StadiumBorder(),
-                          primary: Color(0xfff0092E1),
+                          backgroundColor: Color(0xfff0092E1),
                           fixedSize: Size(330, 50))),
                 ),
               ),
