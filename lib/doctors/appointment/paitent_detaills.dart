@@ -313,18 +313,19 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
       _isLoading = true;
     });
     String res = await DatabaseMethods().makeAppointment(
-        time: timeController.text,
-        date: dateController.text,
-        problem: problem.text,
-        age: age.text,
-        name: nameController.text,
-        gender: genderController.text,
-        phoneNumber: phoneController.text,
-        uid: FirebaseAuth.instance.currentUser!.uid,
-        // doctorid: FirebaseFirestore.instance
-        //     .collection("doctorProfile")
-        //     .doc(FirebaseAuth.instance.currentUser!.uid)
-        );
+      time: timeController.text,
+      date: dateController.text,
+      problem: problem.text,
+      age: age.text,
+      name: nameController.text,
+      gender: genderController.text,
+      phoneNumber: phoneController.text,
+      uid: FirebaseAuth.instance.currentUser!.uid,
+      // medicalRecords: []
+      // doctorid: FirebaseFirestore.instance
+      //     .collection("doctorProfile")
+      //     .doc(FirebaseAuth.instance.currentUser!.uid)
+    );
 
     print(res);
     setState(() {

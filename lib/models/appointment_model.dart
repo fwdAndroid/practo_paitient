@@ -11,7 +11,6 @@ class Appointmentmodel {
   // final String doctorid;
   final String time;
   final String phoneNumber;
-  List<String>? medicalRecordsImages;
 
   Appointmentmodel(
       {required this.status,
@@ -23,7 +22,7 @@ class Appointmentmodel {
       required this.date,
       required this.time,
       required this.phoneNumber,
-      required this.medicalRecordsImages});
+      });
 
   ///Converting OBject into Json Object
   Map<String, dynamic> toJson() => {
@@ -35,7 +34,6 @@ class Appointmentmodel {
         // 'doctorid': doctorid,
         'date': date,
         'time': time,
-        'medicalRecordsImages': medicalRecordsImages,
         'phoneNumber': phoneNumber,
       };
 
@@ -52,7 +50,6 @@ class Appointmentmodel {
       time: snapshot['time'],
       // doctorid: snapshot['doctorid'],
       phoneNumber: snapshot['phoneNumber'],
-      medicalRecordsImages: [],
     );
   }
 }

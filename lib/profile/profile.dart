@@ -23,6 +23,8 @@ class _ProfileState extends State<Profile> {
   final TextEditingController doctorDateofBirthContorller =
       TextEditingController();
 
+  var at = FirebaseAuth.instance.currentUser!.displayName;
+  bool value = false;
   final formKey = GlobalKey<FormState>();
 
   Uint8List? _image;
@@ -191,7 +193,9 @@ class _ProfileState extends State<Profile> {
                         return null;
                       },
                       decoration: InputDecoration(
-                        hintText: 'Adam Smith',
+                        hintText:
+                            FirebaseAuth.instance.currentUser!.displayName ??
+                                'Enter Your',
                         contentPadding: EdgeInsets.only(left: 20),
                         border: InputBorder.none,
                         hintStyle: GoogleFonts.getFont('Montserrat',
@@ -256,7 +260,8 @@ class _ProfileState extends State<Profile> {
                         return null;
                       },
                       decoration: InputDecoration(
-                        hintText: 'adam.smith@yourdomain.com',
+                        hintText: FirebaseAuth.instance.currentUser!.email ??
+                            'adam.smith@yourdomain.com',
                         contentPadding: EdgeInsets.only(
                           left: 20,
                         ),

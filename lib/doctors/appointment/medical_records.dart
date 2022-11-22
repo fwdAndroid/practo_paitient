@@ -7,6 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart' as Path;
 import 'package:practo_paitient/bottom.dart';
+import 'package:practo_paitient/models/reocords.dart';
+import 'package:uuid/uuid.dart';
 
 class MedicalRecords extends StatefulWidget {
   const MedicalRecords({Key? key}) : super(key: key);
@@ -213,7 +215,7 @@ class _MedicalRecordsState extends State<MedicalRecords> {
                       //   Navigator.pushNamed(
                       //       context, onBoardingPhotoVerificationScreenRoute);
                       // }
-                      if (_image.length <= 6) {
+                      if (_image.length >= 6) {
                         setState(() {
                           uploading = true;
                         });
@@ -262,6 +264,9 @@ class _MedicalRecordsState extends State<MedicalRecords> {
     }
   }
 
+  var uid;
+  List images = [];
+
   Future uploadFile() async {
     int i = 1;
 
@@ -274,15 +279,21 @@ class _MedicalRecordsState extends State<MedicalRecords> {
           .child('medicalrecords/${Path.basename(img.path)}');
       await ref!.putFile(img).whenComplete(() async {
         await ref!.getDownloadURL().then((value) {
-          FirebaseFirestore.instance
-              .collection('appointments')
-              .doc(FirebaseAuth.instance.currentUser!.uid)
-              .update({
-            'medicalRecordsImages': FieldValue.arrayUnion([value])
-          });
+          print("Start");
+          // RecordsModel recordsModel =
+          //     RecordsModel(id: , recordsPhotos: FieldValue.arrayUnion([value]));
           // imgRef!.add({'url': value});
-          i++;
+          var uuid = Uuid().v1();
+          FirebaseFirestore.instance
+              .collection("medicalRecords")
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .collection("records")
+              .doc(uuid)
+              .set({
+            "images": FieldValue.arrayUnion([value]),
+          });
         });
+        i++;
       });
     }
   }
@@ -291,5 +302,17 @@ class _MedicalRecordsState extends State<MedicalRecords> {
   void initState() {
     super.initState();
     imgRef = FirebaseFirestore.instance.collection('imageURLs');
+  }
+
+//
+
+  Future<String> records(
+      {required List<dynamic> photos, required String id}) async {
+    RecordsModel recordsModel = RecordsModel(id: id, recordsPhotos: photos);
+
+    String res = "Data Stored";
+    if (res.isNotEmpty) {}
+
+    return res;
   }
 }

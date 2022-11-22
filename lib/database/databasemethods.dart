@@ -77,13 +77,13 @@ class DatabaseMethods {
         ProfileModel userModel = ProfileModel(
           dob: dob,
           gender: gender,
-          name: name,
+          name: FirebaseAuth.instance.currentUser!.displayName ?? name,
           address: address,
           uid: FirebaseAuth.instance.currentUser!.uid,
-          email: email,
+          email: FirebaseAuth.instance.currentUser!.email ?? email,
           phoneNumber:
               FirebaseAuth.instance.currentUser!.phoneNumber.toString(),
-          photoURL: photoURL,
+          photoURL: FirebaseAuth.instance.currentUser!.photoURL ?? photoURL,
         );
         await firebaseFirestore
             .collection('users')
@@ -96,6 +96,20 @@ class DatabaseMethods {
     }
     return res;
   }
+
+  void updateMedicalRecoders(
+      BuildContext context, String messageId, String medicalRecordes) async {
+    try {
+      await firebaseFirestore
+          .collection('appointments')
+          .doc("details")
+          .collection(FirebaseAuth.instance.currentUser!.uid)
+          .doc(messageId)
+          .update({'medicalRecordsImages': medicalRecordes});
+    } catch (e) {}
+  }
+
+  var ss = Uuid().v1();
 
   //Appointment
   Future<String> makeAppointment({
@@ -114,7 +128,6 @@ class DatabaseMethods {
       if (gender.isNotEmpty || date.isNotEmpty || age) {
         var doctorID = Uuid().v1();
         Appointmentmodel userModel = Appointmentmodel(
-          medicalRecordsImages: [],
           id: uid,
           name: name.toString(),
           status: "pending",
