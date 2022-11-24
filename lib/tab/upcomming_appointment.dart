@@ -21,11 +21,18 @@ class _UpComingState extends State<UpComing> {
             ? StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('appointments')
+                    .doc("details")
+                    .collection("records")
                     // .where(
                     //   'status',
                     //   isNotEqualTo: 'pending',
                     // )
-                    .where('status', isEqualTo: "upcomming")
+                    .where(
+                      'status',
+                      isEqualTo: "start",
+                    )
+                    .where('id',
+                        isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                     .snapshots(),
                 builder: (context,
                     AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
@@ -69,6 +76,7 @@ class _UpComingState extends State<UpComing> {
                                       },
                                       title: Text(snap['name']),
                                       subtitle: Text(snap['phoneNumber']),
+                                      trailing: Text(snap['status']),
                                     ),
                                     Divider()
                                   ],

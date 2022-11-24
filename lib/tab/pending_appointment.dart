@@ -23,12 +23,17 @@ class _PendingState extends State<Pending> {
                 stream: FirebaseFirestore.instance
                     .collection('appointments')
                     .doc("details")
-                    .collection(FirebaseAuth.instance.currentUser!.uid)
+                    .collection("records")
                     // .where(
                     //   'status',
                     //   isNotEqualTo: 'pending',
                     // )
-                    .where('status', isEqualTo: "pending")
+                    .where(
+                      'status',
+                      isEqualTo: "pending",
+                    )
+                    .where('id',
+                        isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                     .snapshots(),
                 builder: (context,
                     AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
