@@ -143,7 +143,7 @@ class DatabaseMethods {
         await firebaseFirestore
             .collection('appointments')
             .doc("details")
-            .collection(FirebaseAuth.instance.currentUser!.uid)
+            .collection("records")
             .doc(dooc)
             .set(userModel.toJson());
         res = 'success';
