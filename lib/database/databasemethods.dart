@@ -64,6 +64,7 @@ class DatabaseMethods {
     required String address,
     required String gender,
     required String dob,
+    required String phoneNumber,
     required Uint8List file,
   }) async {
     String res = 'Some error occured';
@@ -81,7 +82,7 @@ class DatabaseMethods {
           address: address,
           uid: FirebaseAuth.instance.currentUser!.uid,
           email: FirebaseAuth.instance.currentUser!.email ?? email,
-          phoneNumber:
+          phoneNumber: phoneNumber ??
               FirebaseAuth.instance.currentUser!.phoneNumber.toString(),
           photoURL: FirebaseAuth.instance.currentUser!.photoURL ?? photoURL,
         );

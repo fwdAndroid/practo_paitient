@@ -24,6 +24,8 @@ class _Edit_SettingState extends State<Edit_Setting> {
   final TextEditingController doctorDateofBirthContorller =
       TextEditingController();
 
+  final TextEditingController _phoneController = TextEditingController();
+
   final formKey = GlobalKey<FormState>();
 
   Uint8List? _image;
@@ -69,6 +71,14 @@ class _Edit_SettingState extends State<Edit_Setting> {
                   return new CircularProgressIndicator();
                 }
                 var document = snapshot.data;
+                _nameController.text = document['name'];
+                _phoneController.text = document['phoneNumber'];
+
+                _emailController.text = document['email'];
+                _addressController.text = document['address'];
+                doctorDateofBirthContorller.text = document['dob'];
+                dropdownvalue = document['gender'];
+                // items = document['gender'] as List<String>;
                 return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -182,17 +192,11 @@ class _Edit_SettingState extends State<Edit_Setting> {
                         ),
                       ),
                       Container(
-
-                          // height: 60,
                           margin: EdgeInsets.only(top: 5, left: 15, right: 15),
-
-                          //  padding: const EdgeInsets.all(3.0),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: new BorderRadius.circular(30),
                               border: Border.all(color: Color(0xffD2D2D2))),
-                          // border: Border.all(color: Colors.grey,width: 0.5)
-
                           child: TextFormField(
                             controller: _nameController,
                             validator: (v) {
@@ -203,7 +207,6 @@ class _Edit_SettingState extends State<Edit_Setting> {
                               return null;
                             },
                             decoration: InputDecoration(
-                              hintText: document['name'],
                               contentPadding: EdgeInsets.only(left: 20),
                               border: InputBorder.none,
                               hintStyle: GoogleFonts.getFont('Montserrat',
@@ -243,19 +246,13 @@ class _Edit_SettingState extends State<Edit_Setting> {
                         ),
                       ),
                       Container(
-
-                          // height: 60,
                           margin: EdgeInsets.only(top: 10, left: 15, right: 15),
-
-                          //  padding: const EdgeInsets.all(3.0),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: new BorderRadius.circular(30),
                               border: Border.all(
                                 color: Color(0xff8D8989),
                               )),
-                          // border: Border.all(color: Colors.grey,width: 0.5)
-
                           child: TextFormField(
                             keyboardType: TextInputType.emailAddress,
                             // //  textAlign: TextAlign.start,
@@ -383,7 +380,7 @@ class _Edit_SettingState extends State<Edit_Setting> {
                             decoration: InputDecoration(
                                 icon: Icon(
                                     Icons.calendar_today), //icon of text field
-                                labelText: document['dob'] //label text of field
+                                hintText: document['dob'] //label text of field
                                 ),
                             readOnly: true,
                             //set it true, so that user will not able to edit text
@@ -403,8 +400,8 @@ class _Edit_SettingState extends State<Edit_Setting> {
                                 print(
                                     formattedDate); //formatted date output using intl package =>  2021-03-16
                                 setState(() {
-                                  doctorDateofBirthContorller.text =
-                                      formattedDate; //set output date to TextField value.
+                                  doctorDateofBirthContorller.text = document[
+                                      "dob"]; //set output date to TextField value.
                                 });
                               } else {}
                             },
@@ -436,19 +433,12 @@ class _Edit_SettingState extends State<Edit_Setting> {
                         ),
                       ),
                       Container(
-
-                          // height: 60,
                           margin: EdgeInsets.only(top: 10, left: 15, right: 15),
-
-                          //  padding: const EdgeInsets.all(3.0),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: new BorderRadius.circular(30),
                               border: Border.all(color: Color(0xff8D8989))),
-                          // border: Border.all(color: Colors.grey,width: 0.5)
-
                           child: TextFormField(
-                            //  textAlign: TextAlign.start,
                             controller: _addressController,
                             validator: (v) {
                               if (v!.isEmpty) {
@@ -459,6 +449,37 @@ class _Edit_SettingState extends State<Edit_Setting> {
                             },
                             decoration: InputDecoration(
                               hintText: document['address'],
+                              contentPadding: EdgeInsets.only(
+                                left: 20,
+                              ),
+                              border: InputBorder.none,
+                              hintStyle: GoogleFonts.getFont('Montserrat',
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xff8D8989),
+                                  fontSize: 15,
+                                  fontStyle: FontStyle.normal),
+                            ),
+                          )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 10, left: 15, right: 15),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: new BorderRadius.circular(30),
+                              border: Border.all(color: Color(0xff8D8989))),
+                          child: TextFormField(
+                            controller: _phoneController,
+                            validator: (v) {
+                              if (v!.isEmpty) {
+                                return " Please Enter Address..\ ";
+                              }
+
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Phone Number',
                               contentPadding: EdgeInsets.only(
                                 left: 20,
                               ),
@@ -514,6 +535,7 @@ class _Edit_SettingState extends State<Edit_Setting> {
       _isLoading = true;
     });
     String rse = await DatabaseMethods().profileDetail(
+      phoneNumber: _phoneController.text,
       dob: doctorDateofBirthContorller.text,
       email: _emailController.text,
       name: _nameController.text,

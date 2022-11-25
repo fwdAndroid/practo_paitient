@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class _ProfileState extends State<Profile> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController doctorDateofBirthContorller =
       TextEditingController();
-
+  final TextEditingController _phoneController = TextEditingController();
   var at = FirebaseAuth.instance.currentUser!.displayName;
   bool value = false;
   final formKey = GlobalKey<FormState>();
@@ -52,6 +53,7 @@ class _ProfileState extends State<Profile> {
     _emailController.clear();
     _nameController.clear();
     _addressController.clear();
+    _phoneController.clear();
     doctorDateofBirthContorller.clear();
   }
 
@@ -60,435 +62,468 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20),
-                  child: Row(
+          child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("users")
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .snapshots(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (!snapshot.hasData) {
+                  return new CircularProgressIndicator();
+                }
+                var document = snapshot.data;
+                _nameController.text = document['name'];
+                _phoneController.text = document['phoneNumber'];
+
+                _emailController.text = document['email'];
+                _addressController.text = document['address'];
+                doctorDateofBirthContorller.text = document['dob'];
+                return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset("asset/Vector.png"),
                       SizedBox(
-                        width: 15,
+                        height: 20,
                       ),
-                      Text(
-                        "Profile",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () => selectImage(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 374,
-                      height: 157,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: Color(0xffD2D2D2),
+                      Container(
+                        margin: EdgeInsets.only(top: 20),
+                        child: Row(
+                          children: [
+                            Image.asset("asset/Vector.png"),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Text(
+                              "Profile",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22),
+                            )
+                          ],
                         ),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _image != null
-                              ? CircleAvatar(
-                                  radius: 60,
-                                  backgroundImage: MemoryImage(_image!))
-                              : Image.asset(
-                                  "asset/cam.png",
-                                  width: 51,
-                                  height: 39,
+                      SizedBox(
+                        height: 10,
+                      ),
+                      InkWell(
+                        onTap: () => selectImage(),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: 374,
+                            height: 157,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Color(0xffD2D2D2),
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _image != null
+                                    ? CircleAvatar(
+                                        radius: 60,
+                                        backgroundImage: MemoryImage(_image!))
+                                    : Image.asset(
+                                        "asset/cam.png",
+                                        width: 51,
+                                        height: 39,
+                                      ),
+                                SizedBox(
+                                  height: 10,
                                 ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: RichText(
-                              text: TextSpan(
-                                text: 'Upload photo profile',
-                                style: GoogleFonts.getFont(
-                                  'Montserrat',
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                  fontStyle: FontStyle.normal,
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: '*',
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      text: 'Upload photo profile',
                                       style: GoogleFonts.getFont(
                                         'Montserrat',
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.red,
+                                        color: Colors.black,
                                         fontStyle: FontStyle.normal,
-                                      )),
-                                ],
-                              ),
+                                      ),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text: '*',
+                                            style: GoogleFonts.getFont(
+                                              'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                              fontStyle: FontStyle.normal,
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Full Name ',
-                      style: GoogleFonts.getFont(
-                        'Montserrat',
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontStyle: FontStyle.normal,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: '*',
-                            style: GoogleFonts.getFont(
-                              'Montserrat',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.red,
-                              fontSize: 12,
-                              fontStyle: FontStyle.normal,
-                            )),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-
-                    // height: 60,
-                    margin: EdgeInsets.only(top: 5, left: 15, right: 15),
-
-                    //  padding: const EdgeInsets.all(3.0),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: new BorderRadius.circular(30),
-                        border: Border.all(color: Color(0xffD2D2D2))),
-                    // border: Border.all(color: Colors.grey,width: 0.5)
-
-                    child: TextFormField(
-                      controller: _nameController,
-                      validator: (v) {
-                        if (v!.isEmpty) {
-                          return " Please Enter username..\ ";
-                        }
-
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        hintText:
-                            FirebaseAuth.instance.currentUser!.displayName ??
-                                'Enter Your',
-                        contentPadding: EdgeInsets.only(left: 20),
-                        border: InputBorder.none,
-                        hintStyle: GoogleFonts.getFont('Montserrat',
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff8D8989),
-                            fontSize: 15,
-                            fontStyle: FontStyle.normal),
-                      ),
-                    )),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Email',
-                      style: GoogleFonts.getFont(
-                        'Montserrat',
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontStyle: FontStyle.normal,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: '*',
-                            style: GoogleFonts.getFont(
-                              'Montserrat',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.red,
-                              fontSize: 12,
-                              fontStyle: FontStyle.normal,
-                            )),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-
-                    // height: 60,
-                    margin: EdgeInsets.only(top: 10, left: 15, right: 15),
-
-                    //  padding: const EdgeInsets.all(3.0),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: new BorderRadius.circular(30),
-                        border: Border.all(
-                          color: Color(0xff8D8989),
-                        )),
-                    // border: Border.all(color: Colors.grey,width: 0.5)
-
-                    child: TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      // //  textAlign: TextAlign.start,
-                      controller: _emailController,
-                      validator: (v) {
-                        if (v!.isEmpty) {
-                          return " Please Enter email..\ ";
-                        }
-
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        hintText: FirebaseAuth.instance.currentUser!.email ??
-                            'adam.smith@yourdomain.com',
-                        contentPadding: EdgeInsets.only(
-                          left: 20,
                         ),
-                        border: InputBorder.none,
-                        hintStyle: GoogleFonts.getFont('Montserrat',
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff8D8989),
-                            fontSize: 15,
-                            fontStyle: FontStyle.normal),
                       ),
-                    )),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Gender',
-                      style: GoogleFonts.getFont(
-                        'Montserrat',
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontStyle: FontStyle.normal,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: '*',
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Full Name ',
                             style: GoogleFonts.getFont(
                               'Montserrat',
                               fontWeight: FontWeight.w500,
-                              color: Colors.red,
-                              fontSize: 12,
+                              color: Colors.black,
+                              fontSize: 16,
                               fontStyle: FontStyle.normal,
-                            )),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 10, left: 15, right: 15),
-
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: Color(0xff8D8989))),
-                  // margin: EdgeInsets.only(left: 25, right: 15),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: DropdownButton(
-                      isExpanded: true,
-                      underline: SizedBox(),
-                      // Initial Value
-                      value: dropdownvalue,
-
-                      // Down Arrow Icon
-                      icon: const Icon(Icons.keyboard_arrow_down),
-
-                      // Array list of items
-                      items: items.map((String items) {
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Text(items),
-                        );
-                      }).toList(),
-                      // After selecting the desired option,it will
-                      // change button value to selected value
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownvalue = newValue!;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Date of Birth',
-                      style: GoogleFonts.getFont(
-                        'Montserrat',
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontStyle: FontStyle.normal,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: '*',
-                            style: GoogleFonts.getFont(
-                              'Montserrat',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.red,
-                              fontSize: 12,
-                              fontStyle: FontStyle.normal,
-                            )),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                    padding: EdgeInsets.all(15),
-                    height: 80,
-                    child: Center(
-                        child: TextField(
-                      controller: doctorDateofBirthContorller,
-                      //editing controller of this TextField
-                      decoration: InputDecoration(
-                          icon: Icon(Icons.calendar_today), //icon of text field
-                          labelText: "Enter Date of Birth" //label text of field
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: '*',
+                                  style: GoogleFonts.getFont(
+                                    'Montserrat',
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                    fontStyle: FontStyle.normal,
+                                  )),
+                            ],
                           ),
-                      readOnly: true,
-                      //set it true, so that user will not able to edit text
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(1950),
-                            //DateTime.now() - not to allow to choose before today.
-                            lastDate: DateTime(2100));
-
-                        if (pickedDate != null) {
-                          print(
-                              pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                          String formattedDate =
-                              DateFormat('yyyy-MM-dd').format(pickedDate);
-                          print(
-                              formattedDate); //formatted date output using intl package =>  2021-03-16
-                          setState(() {
-                            doctorDateofBirthContorller.text =
-                                formattedDate; //set output date to TextField value.
-                          });
-                        } else {}
-                      },
-                    ))),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Address',
-                      style: GoogleFonts.getFont(
-                        'Montserrat',
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontStyle: FontStyle.normal,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: '*',
-                            style: GoogleFonts.getFont(
-                              'Montserrat',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.red,
-                              fontSize: 12,
-                              fontStyle: FontStyle.normal,
-                            )),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-
-                    // height: 60,
-                    margin: EdgeInsets.only(top: 10, left: 15, right: 15),
-
-                    //  padding: const EdgeInsets.all(3.0),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: new BorderRadius.circular(30),
-                        border: Border.all(color: Color(0xff8D8989))),
-                    // border: Border.all(color: Colors.grey,width: 0.5)
-
-                    child: TextFormField(
-                      //  textAlign: TextAlign.start,
-                      controller: _addressController,
-                      validator: (v) {
-                        if (v!.isEmpty) {
-                          return " Please Enter Address..\ ";
-                        }
-
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Los Angles',
-                        contentPadding: EdgeInsets.only(
-                          left: 20,
                         ),
-                        border: InputBorder.none,
-                        hintStyle: GoogleFonts.getFont('Montserrat',
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff8D8989),
-                            fontSize: 15,
-                            fontStyle: FontStyle.normal),
                       ),
-                    )),
-                SizedBox(
-                  height: 30,
-                ),
-                Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Color(0xfff0092E1).withOpacity(.6),
-                      fixedSize: const Size(350, 60),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40)),
-                    ),
-                    onPressed: profile,
-                    child: _isLoading == true
-                        ? const Center(
-                            child: CircularProgressIndicator.adaptive(),
-                          )
-                        : Text(
-                            'Confrim',
-                            style: GoogleFonts.getFont('Montserrat',
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontStyle: FontStyle.normal),
+                      Container(
+                          margin: EdgeInsets.only(top: 5, left: 15, right: 15),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: new BorderRadius.circular(30),
+                              border: Border.all(color: Color(0xffD2D2D2))),
+                          child: TextFormField(
+                            controller: _nameController,
+                            validator: (v) {
+                              if (v!.isEmpty) {
+                                return " Please Enter username..\ ";
+                              }
+
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: FirebaseAuth
+                                      .instance.currentUser!.displayName ??
+                                  'Enter Your',
+                              contentPadding: EdgeInsets.only(left: 20),
+                              border: InputBorder.none,
+                              hintStyle: GoogleFonts.getFont('Montserrat',
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xff8D8989),
+                                  fontSize: 15,
+                                  fontStyle: FontStyle.normal),
+                            ),
+                          )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Email',
+                            style: GoogleFonts.getFont(
+                              'Montserrat',
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontStyle: FontStyle.normal,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: '*',
+                                  style: GoogleFonts.getFont(
+                                    'Montserrat',
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                    fontStyle: FontStyle.normal,
+                                  )),
+                            ],
                           ),
-                  ),
-                ),
-              ]),
+                        ),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 10, left: 15, right: 15),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: new BorderRadius.circular(30),
+                              border: Border.all(
+                                color: Color(0xff8D8989),
+                              )),
+                          child: TextFormField(
+                            keyboardType: TextInputType.emailAddress,
+                            // //  textAlign: TextAlign.start,
+                            controller: _emailController,
+                            validator: (v) {
+                              if (v!.isEmpty) {
+                                return " Please Enter email..\ ";
+                              }
+
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText:
+                                  FirebaseAuth.instance.currentUser!.email ??
+                                      'adam.smith@yourdomain.com',
+                              contentPadding: EdgeInsets.only(
+                                left: 20,
+                              ),
+                              border: InputBorder.none,
+                              hintStyle: GoogleFonts.getFont('Montserrat',
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xff8D8989),
+                                  fontSize: 15,
+                                  fontStyle: FontStyle.normal),
+                            ),
+                          )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Gender',
+                            style: GoogleFonts.getFont(
+                              'Montserrat',
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontStyle: FontStyle.normal,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: '*',
+                                  style: GoogleFonts.getFont(
+                                    'Montserrat',
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                    fontStyle: FontStyle.normal,
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 10, left: 15, right: 15),
+
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(color: Color(0xff8D8989))),
+                        // margin: EdgeInsets.only(left: 25, right: 15),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: DropdownButton(
+                            isExpanded: true,
+                            underline: SizedBox(),
+                            // Initial Value
+                            value: dropdownvalue,
+
+                            // Down Arrow Icon
+                            icon: const Icon(Icons.keyboard_arrow_down),
+
+                            // Array list of items
+                            items: items.map((String items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Text(items),
+                              );
+                            }).toList(),
+                            // After selecting the desired option,it will
+                            // change button value to selected value
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropdownvalue = newValue!;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Date of Birth',
+                            style: GoogleFonts.getFont(
+                              'Montserrat',
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontStyle: FontStyle.normal,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: '*',
+                                  style: GoogleFonts.getFont(
+                                    'Montserrat',
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                    fontStyle: FontStyle.normal,
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                          padding: EdgeInsets.all(15),
+                          height: 80,
+                          child: Center(
+                              child: TextField(
+                            controller: doctorDateofBirthContorller,
+                            //editing controller of this TextField
+                            decoration: InputDecoration(
+                                icon: Icon(
+                                    Icons.calendar_today), //icon of text field
+                                labelText:
+                                    "Enter Date of Birth" //label text of field
+                                ),
+                            readOnly: true,
+                            //set it true, so that user will not able to edit text
+                            onTap: () async {
+                              DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(1950),
+                                  //DateTime.now() - not to allow to choose before today.
+                                  lastDate: DateTime(2100));
+
+                              if (pickedDate != null) {
+                                print(
+                                    pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                                String formattedDate =
+                                    DateFormat('yyyy-MM-dd').format(pickedDate);
+                                print(
+                                    formattedDate); //formatted date output using intl package =>  2021-03-16
+                                setState(() {
+                                  doctorDateofBirthContorller.text =
+                                      formattedDate; //set output date to TextField value.
+                                });
+                              } else {}
+                            },
+                          ))),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Address',
+                            style: GoogleFonts.getFont(
+                              'Montserrat',
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontStyle: FontStyle.normal,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: '*',
+                                  style: GoogleFonts.getFont(
+                                    'Montserrat',
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                    fontStyle: FontStyle.normal,
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 10, left: 15, right: 15),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: new BorderRadius.circular(30),
+                              border: Border.all(color: Color(0xff8D8989))),
+                          child: TextFormField(
+                            controller: _addressController,
+                            validator: (v) {
+                              if (v!.isEmpty) {
+                                return " Please Enter Address..\ ";
+                              }
+
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Los Angles',
+                              contentPadding: EdgeInsets.only(
+                                left: 20,
+                              ),
+                              border: InputBorder.none,
+                              hintStyle: GoogleFonts.getFont('Montserrat',
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xff8D8989),
+                                  fontSize: 15,
+                                  fontStyle: FontStyle.normal),
+                            ),
+                          )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 10, left: 15, right: 15),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: new BorderRadius.circular(30),
+                              border: Border.all(color: Color(0xff8D8989))),
+                          child: TextFormField(
+                            controller: _phoneController,
+                            validator: (v) {
+                              if (v!.isEmpty) {
+                                return " Please Enter Address..\ ";
+                              }
+
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Phone Number',
+                              contentPadding: EdgeInsets.only(
+                                left: 20,
+                              ),
+                              border: InputBorder.none,
+                              hintStyle: GoogleFonts.getFont('Montserrat',
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xff8D8989),
+                                  fontSize: 15,
+                                  fontStyle: FontStyle.normal),
+                            ),
+                          )),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Center(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Color(0xfff0092E1).withOpacity(.6),
+                            fixedSize: const Size(350, 60),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(40)),
+                          ),
+                          onPressed: profile,
+                          child: _isLoading == true
+                              ? const Center(
+                                  child: CircularProgressIndicator.adaptive(),
+                                )
+                              : Text(
+                                  'Confrim',
+                                  style: GoogleFonts.getFont('Montserrat',
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontStyle: FontStyle.normal),
+                                ),
+                        ),
+                      ),
+                    ]);
+              }),
         ));
   }
 
@@ -505,6 +540,7 @@ class _ProfileState extends State<Profile> {
       _isLoading = true;
     });
     String rse = await DatabaseMethods().profileDetail(
+      phoneNumber: _phoneController.text,
       dob: doctorDateofBirthContorller.text,
       email: _emailController.text,
       name: _nameController.text,
