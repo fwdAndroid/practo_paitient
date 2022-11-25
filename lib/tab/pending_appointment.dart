@@ -60,9 +60,8 @@ class _PendingState extends State<Pending> {
                           child: ListView.builder(
                               itemCount: snapshot.data!.docs.length,
                               itemBuilder: (BuildContext context, int index) {
-                                Map<String, dynamic> snap =
-                                    snapshot.data!.docs[index].data()
-                                        as Map<String, dynamic>;
+                                final DocumentSnapshot documentSnapshot =
+                                    snapshot.data!.docs[index];
                                 return Column(
                                   children: [
                                     ListTile(
@@ -75,9 +74,22 @@ class _PendingState extends State<Pending> {
                                         //   ),
                                         // );
                                       },
-                                      title: Text(snap['name']),
-                                      subtitle: Text(snap['phoneNumber']),
-                                      trailing: Text(snap['status']),
+                                      title: Text(documentSnapshot['name']),
+                                      subtitle:
+                                          Text(documentSnapshot['phoneNumber']),
+                                      trailing: IconButton(
+                                          onPressed: () async {
+                                            await FirebaseFirestore.instance
+                                                .collection('appointments')
+                                                .doc("details")
+                                                .collection("records")
+                                                .doc(documentSnapshot.id)
+                                                .delete();
+                                          },
+                                          icon: Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                          )),
                                     ),
                                     Divider()
                                   ],
