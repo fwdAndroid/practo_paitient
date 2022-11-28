@@ -120,83 +120,86 @@ class _ChatRoomState extends State<ChatRoom> {
                     if (snapshot.hasData) {
                       return snapshot.data!.docs == 0
                           ? Center(child: Text("No Communication Start"))
-                          : ListView.builder(
-                              controller: scrollController,
-                              itemCount: snapshot.data!.docs.length,
-                              shrinkWrap: true,
-                              padding: EdgeInsets.only(top: 10, bottom: 10),
-                              physics: NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                var ds = snapshot.data!.docs[index];
-                                return ds.get("type") == 0
-                                    ? Container(
-                                        padding: EdgeInsets.only(
-                                            left: 14,
-                                            right: 14,
-                                            top: 10,
-                                            bottom: 10),
-                                        child: Align(
-                                          alignment: (ds.get("senderId") ==
-                                                  FirebaseAuth
-                                                      .instance.currentUser!.uid
-                                              ? Alignment.bottomRight
-                                              : Alignment.bottomLeft),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              color: (ds.get("senderId") ==
-                                                      FirebaseAuth.instance
-                                                          .currentUser!.uid
-                                                  ? Colors.grey.shade200
-                                                  : Colors.blue[200]),
-                                            ),
-                                            padding: EdgeInsets.all(16),
-                                            child: Text(
-                                              ds.get("content"),
-                                              style: TextStyle(fontSize: 15),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : ds.get("type") == 1
-                                        ? Container(
-                                            padding: EdgeInsets.only(
-                                                left: 14,
-                                                right: 14,
-                                                top: 10,
-                                                bottom: 10),
-                                            child: Align(
-                                              alignment:
-                                                  (ds.get("receiverId") ==
-                                                          widget.doctorid
-                                                      ? Alignment.bottomRight
-                                                      : Alignment.bottomLeft),
-                                              child: Container(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.2,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.4,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  image: DecorationImage(
-                                                      image: NetworkImage(
-                                                        ds.get("image"),
-                                                      ),
-                                                      fit: BoxFit.fill),
-                                                  // color: (ds.get("senderId") == firebaseAuth.currentUser!.uid?Colors.grey.shade200:Colors.blue[200]),
-                                                ),
-                                                // padding: EdgeInsets.all(16),
+                          : SingleChildScrollView(
+                              child: ListView.builder(
+                                controller: scrollController,
+                                itemCount: snapshot.data!.docs.length,
+                                shrinkWrap: true,
+                                padding: EdgeInsets.only(top: 10, bottom: 10),
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  var ds = snapshot.data!.docs[index];
+                                  return ds.get("type") == 0
+                                      ? Container(
+                                          padding: EdgeInsets.only(
+                                              left: 14,
+                                              right: 14,
+                                              top: 10,
+                                              bottom: 10),
+                                          child: Align(
+                                            alignment: (ds.get("senderId") ==
+                                                    FirebaseAuth.instance
+                                                        .currentUser!.uid
+                                                ? Alignment.bottomRight
+                                                : Alignment.bottomLeft),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: (ds.get("senderId") ==
+                                                        FirebaseAuth.instance
+                                                            .currentUser!.uid
+                                                    ? Colors.grey.shade200
+                                                    : Colors.blue[200]),
+                                              ),
+                                              padding: EdgeInsets.all(16),
+                                              child: Text(
+                                                ds.get("content"),
+                                                style: TextStyle(fontSize: 15),
                                               ),
                                             ),
-                                          )
-                                        : Container();
-                              },
+                                          ),
+                                        )
+                                      : ds.get("type") == 1
+                                          ? Container(
+                                              padding: EdgeInsets.only(
+                                                  left: 14,
+                                                  right: 14,
+                                                  top: 10,
+                                                  bottom: 10),
+                                              child: Align(
+                                                alignment:
+                                                    (ds.get("receiverId") ==
+                                                            widget.doctorid
+                                                        ? Alignment.bottomRight
+                                                        : Alignment.bottomLeft),
+                                                child: Container(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.2,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.4,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    image: DecorationImage(
+                                                        image: NetworkImage(
+                                                          ds.get("image"),
+                                                        ),
+                                                        fit: BoxFit.fill),
+                                                    // color: (ds.get("senderId") == firebaseAuth.currentUser!.uid?Colors.grey.shade200:Colors.blue[200]),
+                                                  ),
+                                                  // padding: EdgeInsets.all(16),
+                                                ),
+                                              ),
+                                            )
+                                          : Container();
+                                },
+                              ),
                             );
                     } else if (snapshot.hasError) {
                       return Center(child: Icon(Icons.error_outline));
