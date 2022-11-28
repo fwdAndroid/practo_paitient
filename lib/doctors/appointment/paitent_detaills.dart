@@ -13,7 +13,9 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 class PaitnetsDetails extends StatefulWidget {
   final id;
-  PaitnetsDetails({Key? key, required this.id}) : super(key: key);
+  final doctorName;
+  PaitnetsDetails({Key? key, required this.id, required this.doctorName})
+      : super(key: key);
 
   @override
   State<PaitnetsDetails> createState() => _PaitnetsDetailsState();
@@ -363,19 +365,21 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
       _isLoading = true;
     });
     String res = await DatabaseMethods().makeAppointment(
-      time: timeController.text,
-      date: dateController.text,
-      problem: problem.text,
-      age: age.text,
-      name: nameController.text,
-      gender: genderController.text,
-      phoneNumber: phoneController.text,
-      uid: FirebaseAuth.instance.currentUser!.uid, doctorId: widget.id,
-      // medicalRecords: []
-      // doctorid: FirebaseFirestore.instance
-      //     .collection("doctorProfile")
-      //     .doc(FirebaseAuth.instance.currentUser!.uid)
-    );
+        time: timeController.text,
+        date: dateController.text,
+        problem: problem.text,
+        age: age.text,
+        name: nameController.text,
+        gender: genderController.text,
+        phoneNumber: phoneController.text,
+        uid: FirebaseAuth.instance.currentUser!.uid,
+        doctorId: widget.id,
+        doctorName: widget.doctorName
+        // medicalRecords: []
+        // doctorid: FirebaseFirestore.instance
+        //     .collection("doctorProfile")
+        //     .doc(FirebaseAuth.instance.currentUser!.uid)
+        );
 
     print(res);
     setState(() {

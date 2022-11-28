@@ -123,6 +123,7 @@ class DatabaseMethods {
     required phoneNumber,
     required doctorId,
     required uid,
+    required doctorName
   }) async {
     String res = 'Some error occured';
 
@@ -137,6 +138,7 @@ class DatabaseMethods {
           problem: problem.toString(),
           date: date.toString(),
           time: time.toString(),
+          doctorName: doctorName.toString(),
           phoneNumber: phoneNumber.toString(),
         );
 

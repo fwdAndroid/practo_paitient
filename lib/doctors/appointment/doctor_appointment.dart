@@ -16,6 +16,7 @@ class Doctor_Appointment extends StatefulWidget {
   String? description;
   String? experience;
   String? address;
+  String? doctorName;
   List<dynamic>? images;
 
   Doctor_Appointment(
@@ -355,7 +356,8 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
                             context,
                             MaterialPageRoute(
                                 builder: (builder) => PaitnetsDetails(
-                                      id: widget.id
+                                      id: widget.id,
+                                      doctorName: widget.name,
                                     )));
                       },
                       child: Text('Make Appointment'),
