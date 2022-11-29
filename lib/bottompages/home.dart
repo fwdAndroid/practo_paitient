@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:practo_paitient/doctors/favourite_doctor.dart';
 import 'package:practo_paitient/doctors/specialist_doctor.dart';
+import 'package:practo_paitient/hospitals/hospitals_list.dart';
 import 'package:practo_paitient/notification/notifications.dart';
 
 class Home_Screen extends StatefulWidget {
@@ -153,43 +154,51 @@ class _Home_ScreenState extends State<Home_Screen> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 154,
-                        height: 225,
-                        decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 196, 25, 25),
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child:
-                                    Image.asset("asset/hospital-building.png"),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Hospitals",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Colors.white),
+                    InkWell(
+                      onTap: (){
+                         Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => HospitalList()));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: 154,
+                          height: 225,
+                          decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 196, 25, 25),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child:
+                                      Image.asset("asset/hospital-building.png"),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "21 Hospitals",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16,
-                                      color: Colors.white),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Hospitals",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.white),
+                                  ),
                                 ),
-                              ),
-                            ]),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "21 Hospitals",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ]),
+                        ),
                       ),
                     ),
                   ],
