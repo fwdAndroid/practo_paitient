@@ -78,13 +78,12 @@ class DatabaseMethods {
         ProfileModel userModel = ProfileModel(
           dob: dob,
           gender: gender,
-          name: FirebaseAuth.instance.currentUser!.displayName ?? name,
+          name: name,
           address: address,
           uid: FirebaseAuth.instance.currentUser!.uid,
           email: FirebaseAuth.instance.currentUser!.email ?? email,
-          phoneNumber: phoneNumber ??
-              FirebaseAuth.instance.currentUser!.phoneNumber.toString(),
-          photoURL: FirebaseAuth.instance.currentUser!.photoURL ?? photoURL,
+          phoneNumber: phoneNumber,
+          photoURL: photoURL,
         );
         await firebaseFirestore
             .collection('users')
@@ -113,18 +112,17 @@ class DatabaseMethods {
   var ss = Uuid().v1();
 
   //Appointment
-  Future<String> makeAppointment({
-    required name,
-    required age,
-    required problem,
-    required gender,
-    required date,
-    required time,
-    required phoneNumber,
-    required doctorId,
-    required uid,
-    required doctorName
-  }) async {
+  Future<String> makeAppointment(
+      {required name,
+      required age,
+      required problem,
+      required gender,
+      required date,
+      required time,
+      required phoneNumber,
+      required doctorId,
+      required uid,
+      required doctorName}) async {
     String res = 'Some error occured';
 
     try {

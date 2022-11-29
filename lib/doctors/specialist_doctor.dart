@@ -39,6 +39,7 @@ class _Specialist_DoctorState extends State<Specialist_Doctor> {
                       context,
                       MaterialPageRoute(
                           builder: (builder) => Doctor_Appointment(
+                              
                               experience: data['experience'],
                               id: data['uid'],
                               name: data['doctorName'],

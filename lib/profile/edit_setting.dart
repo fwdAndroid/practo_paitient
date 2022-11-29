@@ -29,6 +29,7 @@ class _Edit_SettingState extends State<Edit_Setting> {
   final formKey = GlobalKey<FormState>();
 
   Uint8List? _image;
+  String image = "";
 
   bool _isLoading = false;
   var items = [
@@ -73,7 +74,7 @@ class _Edit_SettingState extends State<Edit_Setting> {
                 var document = snapshot.data;
                 _nameController.text = document['name'];
                 _phoneController.text = document['phoneNumber'];
-
+                image = document['photoURL'];
                 _emailController.text = document['email'];
                 _addressController.text = document['address'];
                 doctorDateofBirthContorller.text = document['dob'];

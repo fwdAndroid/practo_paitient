@@ -37,45 +37,39 @@ class Doctor_Appointment extends StatefulWidget {
 
 class _Doctor_AppointmentState extends State<Doctor_Appointment> {
   DateTime dateTime = DateTime.now();
+  var ispressed;
   var sss;
   int days = 10;
   @override
   Widget build(BuildContext context) {
+    var snapsl;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        title: Text(
-          widget.name!,
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.white,
-        actions: [
-          InkWell(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (builder) => FavouriteDoctor()));
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Container(
-                  // margin: EdgeInsets.symmetric(horizontal: 10),
-                  width: 50,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Color(0xffE4ECFE),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: Icon(
-                    Icons.favorite_border,
-                    color: Color(0xff1060D7),
-                    // size: 15,
-                  )),
-            ),
-          )
-        ],
-      ),
+          automaticallyImplyLeading: false,
+          elevation: 0,
+          title: Text(
+            widget.name!,
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.white,
+          actions: [
+            //   IconButton(
+            //       icon: Icon(Icons.favorite_border,
+            //           color: ispressed ? Color(0xff1060D7) : Colors.green),
+            //       onPressed: () async {
+            //         await FirebaseFirestore.instance
+            //             .collection("doctorsprofile")
+            //             .doc(snapsl.id)
+            //             .update({"like": true}).whenComplete(() => {
+            //                   Navigator.push(
+            //                       context,
+            //                       MaterialPageRoute(
+            //                           builder: (builder) => FavouriteDoctor()))
+            //                 });
+            //       }),
+            // ],]
+          ]),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

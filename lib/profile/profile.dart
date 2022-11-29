@@ -71,13 +71,7 @@ class _ProfileState extends State<Profile> {
                 if (!snapshot.hasData) {
                   return new CircularProgressIndicator();
                 }
-                var document = snapshot.data;
-                _nameController.text = document['name'];
-                _phoneController.text = document['phoneNumber'];
 
-                _emailController.text = document['email'];
-                _addressController.text = document['address'];
-                doctorDateofBirthContorller.text = document['dob'];
                 return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -206,9 +200,7 @@ class _ProfileState extends State<Profile> {
                               return null;
                             },
                             decoration: InputDecoration(
-                              hintText: FirebaseAuth
-                                      .instance.currentUser!.displayName ??
-                                  'Enter Your',
+                              hintText: 'Enter Your',
                               contentPadding: EdgeInsets.only(left: 20),
                               border: InputBorder.none,
                               hintStyle: GoogleFonts.getFont('Montserrat',
@@ -267,9 +259,7 @@ class _ProfileState extends State<Profile> {
                               return null;
                             },
                             decoration: InputDecoration(
-                              hintText:
-                                  FirebaseAuth.instance.currentUser!.email ??
-                                      'adam.smith@yourdomain.com',
+                              hintText: 'adam.smith@yourdomain.com',
                               contentPadding: EdgeInsets.only(
                                 left: 20,
                               ),
@@ -475,6 +465,7 @@ class _ProfileState extends State<Profile> {
                               borderRadius: new BorderRadius.circular(30),
                               border: Border.all(color: Color(0xff8D8989))),
                           child: TextFormField(
+                            keyboardType: TextInputType.number,
                             controller: _phoneController,
                             validator: (v) {
                               if (v!.isEmpty) {
