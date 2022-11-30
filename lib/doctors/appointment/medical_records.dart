@@ -215,7 +215,7 @@ class _MedicalRecordsState extends State<MedicalRecords> {
                       //   Navigator.pushNamed(
                       //       context, onBoardingPhotoVerificationScreenRoute);
                       // }
-                      if (_image.length >= 6) {
+                      if (_image.length <= 6) {
                         setState(() {
                           uploading = true;
                         });
