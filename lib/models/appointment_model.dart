@@ -7,27 +7,38 @@ class Appointmentmodel {
   final String problem;
   final String name;
   final String age;
-  final String date;
+  final String? date;
   final String? doctorid;
-  final String time;
+  final String? hospitalid;
+  final String? hospitalemail;
+  final String? hospitalAddress;
+  final String? hospitalName;
+  final String? time;
   final String phoneNumber;
   final String doctorName;
 
-  Appointmentmodel({
-    required this.status,
-    required this.id,
-    required this.problem,
-    required this.name,
-    required this.doctorid,
-    required this.age,
-    required this.date,
-    required this.time,
-    required this.phoneNumber,
-    required this.doctorName
-  });
+  Appointmentmodel(
+      {required this.hospitalid,
+      required this.hospitalemail,
+      required this.hospitalName,
+      required this.hospitalAddress,
+      required this.status,
+      required this.id,
+      required this.problem,
+      required this.name,
+      required this.doctorid,
+      required this.age,
+      required this.date,
+      required this.time,
+      required this.phoneNumber,
+      required this.doctorName});
 
   ///Converting OBject into Json Object
   Map<String, dynamic> toJson() => {
+        'hospitalid': hospitalid,
+        'hospitalemail': hospitalemail,
+        'hospitalName': hospitalName,
+        'hospitalAddress': hospitalAddress,
         'status': status,
         'id': id,
         'problem': problem,
@@ -44,16 +55,19 @@ class Appointmentmodel {
     var snapshot = snaps.data() as Map<String, dynamic>;
 
     return Appointmentmodel(
-      status: snapshot['status'],
-      doctorid: snapshot['doctorid'],
-      id: snapshot['id'],
-      problem: snapshot['problem'],
-      name: snapshot['name'],
-      age: snapshot['age'],
-      date: snapshot['date'],
-      time: snapshot['time'],
-      phoneNumber: snapshot['phoneNumber'],
-      doctorName: snapshot['doctorName']
-    );
+        hospitalAddress: snapshot['hospitalAddress'] ?? '',
+        hospitalName: snapshot['hospitalName'],
+        hospitalemail: snapshot['hospitalemail'],
+        hospitalid: snapshot['hospitalid'],
+        status: snapshot['status'] ?? '',
+        doctorid: snapshot['doctorid'] ?? '',
+        id: snapshot['id'] ?? '',
+        problem: snapshot['problem'] ?? '',
+        name: snapshot['name'] ?? '',
+        age: snapshot['age'] ?? '',
+        date: snapshot['date'] ?? '',
+        time: snapshot['time'] ?? '',
+        phoneNumber: snapshot['phoneNumber'] ?? '',
+        doctorName: snapshot['doctorName'] ?? '');
   }
 }

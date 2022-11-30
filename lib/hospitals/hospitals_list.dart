@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:practo_paitient/hospitals/hospital_appointment.dart';
 
 class HospitalList extends StatefulWidget {
   const HospitalList({super.key});
@@ -32,19 +33,25 @@ class _HospitalListState extends State<HospitalList> {
             return Card(
               child: ListTile(
                 onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (builder) => Hospital_Appointment(
+                                id: data['uid'],
+                                name: data['name'],
+                                email: data['email'],
+                                address: data['address'],
+                              )));
                   // Navigator.push(
                   //     context,
                   //     MaterialPageRoute(
-                  //         builder: (builder) => Doctor_Appointment(
-
-                  //             experience: data['experience'],
-                  //             id: data['uid'],
-                  //             name: data['doctorName'],
-                  //             specialization: data['doctorSpecialization'],
-                  //             image: data['doctorPhotoURL'],
-                  //             address: data['doctorAddres'],
-                  //             images: data['doctorCertificationImages'],
-                  //             description: data['doctorDesc'])));
+                  //         builder: (builder) => Hospital_Appointment(
+                  //               experience: data['experience'],
+                  //               id: data['uid'],
+                  //               name: data['name'],
+                  //               email: data['email'],
+                  //               address: data['address'],
+                  //             )));
                 },
                 title: Row(
                   children: [

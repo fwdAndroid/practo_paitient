@@ -113,42 +113,48 @@ class DatabaseMethods {
 
   //Appointment
   Future<String> makeAppointment(
-      {required name,
-      required age,
-      required problem,
-      required gender,
-      required date,
-      required time,
-      required phoneNumber,
-      required doctorId,
-      required uid,
-      required doctorName}) async {
+      {String? name,
+      String? age,
+      String? problem,
+      String? gender,
+      String? date,
+      String? time,
+      String? hospitalId,
+      String? hospitalName,
+      String? hospitalAddress,
+      String? hospitalEmail,
+      String? phoneNumber,
+      String? doctorId,
+      String? uid,
+      String? doctorName}) async {
     String res = 'Some error occured';
 
     try {
-      if (gender.isNotEmpty || date.isNotEmpty || age) {
-        Appointmentmodel userModel = Appointmentmodel(
-          id: uid,
-          doctorid: doctorId.toString(),
-          name: name.toString(),
-          status: "pending",
-          age: age.toString(),
-          problem: problem.toString(),
-          date: date.toString(),
-          time: time.toString(),
-          doctorName: doctorName.toString(),
-          phoneNumber: phoneNumber.toString(),
-        );
+      Appointmentmodel userModel = Appointmentmodel(
+        hospitalid: hospitalId,
+        hospitalAddress: hospitalAddress,
+        hospitalName: hospitalName,
+        hospitalemail: hospitalEmail,
+        id: uid!,
+        doctorid: doctorId.toString(),
+        name: name.toString(),
+        status: "pending",
+        age: age.toString(),
+        problem: problem.toString(),
+        date: date.toString(),
+        time: time.toString(),
+        doctorName: doctorName.toString(),
+        phoneNumber: phoneNumber.toString(),
+      );
 
-        var dooc = Uuid().v1();
-        await firebaseFirestore
-            .collection('appointments')
-            .doc("details")
-            .collection("records")
-            .doc(dooc)
-            .set(userModel.toJson());
-        res = 'success';
-      }
+      var dooc = Uuid().v1();
+      await firebaseFirestore
+          .collection('appointments')
+          .doc("details")
+          .collection("records")
+          .doc(dooc)
+          .set(userModel.toJson());
+      res = 'success';
     } catch (e) {
       res = e.toString();
     }
