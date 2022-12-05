@@ -75,7 +75,7 @@ class _UpComingState extends State<UpComing> {
                                         // );
                                       },
                                       title: Text(snap['name']),
-                                      subtitle: Text(snap['phoneNumber']),
+                                      subtitle: Text(snap['problem']),
                                       trailing: Text(snap['status']),
                                     ),
                                     Divider()

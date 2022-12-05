@@ -76,7 +76,7 @@ class _PendingState extends State<Pending> {
                                       },
                                       title: Text(documentSnapshot['name']),
                                       subtitle:
-                                          Text(documentSnapshot['phoneNumber']),
+                                          Text(documentSnapshot['problem']),
                                       trailing: IconButton(
                                           onPressed: () async {
                                             await FirebaseFirestore.instance

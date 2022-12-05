@@ -75,7 +75,7 @@ class _PastState extends State<Past> {
                                         // );
                                       },
                                       title: Text(snap['name']),
-                                      subtitle: Text(snap['phoneNumber']),
+                                      subtitle: Text(snap['problem']),
                                       trailing: Text(snap['status']),
                                     ),
                                     Divider()
