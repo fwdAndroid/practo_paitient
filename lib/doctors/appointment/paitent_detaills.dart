@@ -50,6 +50,8 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
   /// Each time to start a speech recognition session
   void _startListening() async {
     await _speechToText.listen(onResult: _onSpeechResult);
+    _speechToText.isListening;
+
     setState(() {});
   }
 
@@ -144,7 +146,6 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                       ),
                     ),
                   ),
-                 
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Row(
