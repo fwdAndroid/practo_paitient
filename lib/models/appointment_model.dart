@@ -14,7 +14,6 @@ class Appointmentmodel {
   final String? hospitalAddress;
   final String? hospitalName;
   final String? time;
-  final String phoneNumber;
   final String doctorName;
 
   Appointmentmodel(
@@ -30,7 +29,6 @@ class Appointmentmodel {
       required this.age,
       required this.date,
       required this.time,
-      required this.phoneNumber,
       required this.doctorName});
 
   ///Converting OBject into Json Object
@@ -47,7 +45,6 @@ class Appointmentmodel {
         'doctorid': doctorid,
         'date': date,
         'time': time,
-        'phoneNumber': phoneNumber,
         'doctorName': doctorName
       };
 
@@ -67,7 +64,6 @@ class Appointmentmodel {
         age: snapshot['age'] ?? '',
         date: snapshot['date'] ?? '',
         time: snapshot['time'] ?? '',
-        phoneNumber: snapshot['phoneNumber'] ?? '',
         doctorName: snapshot['doctorName'] ?? '');
   }
 }

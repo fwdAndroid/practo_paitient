@@ -123,7 +123,6 @@ class DatabaseMethods {
       String? hospitalName,
       String? hospitalAddress,
       String? hospitalEmail,
-      String? phoneNumber,
       String? doctorId,
       String? uid,
       String? doctorName}) async {
@@ -144,7 +143,6 @@ class DatabaseMethods {
         date: date.toString(),
         time: time.toString(),
         doctorName: doctorName.toString(),
-        phoneNumber: phoneNumber.toString(),
       );
 
       var dooc = Uuid().v1();

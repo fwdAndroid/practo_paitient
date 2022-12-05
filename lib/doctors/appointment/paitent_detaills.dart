@@ -144,43 +144,7 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Text(
-                            "Phone Number:",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: TextField(
-                              controller: phoneController,
-                              decoration: InputDecoration(
-                                hintText: 'phoneNumber',
-                                hintStyle: TextStyle(color: Colors.grey),
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0)),
-                                ),
-                              ),
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                 
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Row(
@@ -371,7 +335,6 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
         age: age.text,
         name: nameController.text,
         gender: genderController.text,
-        phoneNumber: phoneController.text,
         uid: FirebaseAuth.instance.currentUser!.uid,
         doctorId: widget.id,
         doctorName: widget.doctorName

@@ -327,7 +327,6 @@ class _Hospital_DetailsState extends State<Hospital_Details> {
         age: age.text,
         name: nameController.text,
         gender: genderController.text,
-        phoneNumber: phoneController.text,
         uid: FirebaseAuth.instance.currentUser!.uid,
         hospitalId: widget.id,
         hospitalName: widget.hospitalName
