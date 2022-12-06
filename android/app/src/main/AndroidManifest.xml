@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
     package="com.example.practo_paitient">
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -7,7 +8,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
 
    <application
+        tools:replace="android:label"
         android:label="practo_paitient"
+        android:exported="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
