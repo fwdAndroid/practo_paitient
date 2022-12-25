@@ -79,9 +79,9 @@ class _AllChatsState extends State<AllChats> {
                                   CupertinoPageRoute(builder: (context) {
                                 return ChatRoom(
                                   doctorName: documentSnapshot['doctorName'],
-                                  userid: documentSnapshot['id'],
-                                  doctorid: documentSnapshot['doctorid'],
-                                  paitentname: documentSnapshot['name'],
+                                  paitientid: documentSnapshot['id'],
+                                  doctorId: documentSnapshot['doctorid'],
+                                  paitientname: documentSnapshot['name'],
                                   // user : widget.doctorid,
                                 );
                               }));

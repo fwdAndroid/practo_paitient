@@ -5,7 +5,7 @@ class ChatPage extends StatefulWidget {
   final doctorid;
   final userid;
   final name;
-  ChatPage(
+       ChatPage(
       {Key? key,
       required this.doctorid,
       required this.userid,

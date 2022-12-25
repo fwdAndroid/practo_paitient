@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 import 'package:practo_paitient/auth/verifyphone.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:practo_paitient/database/databasemethods.dart';
 
 class ContinuePhone extends StatefulWidget {
   const ContinuePhone({Key? key}) : super(key: key);
@@ -16,6 +18,14 @@ class _ContinuePhoneState extends State<ContinuePhone> {
 
   String dialCodeDigits = "+92";
   TextEditingController _controller = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("Fawad");
+    DatabaseMethods().checkDocuement(FirebaseAuth.instance.currentUser!.uid);
+  }
+
   @override
   Widget build(BuildContext context) {
     PhoneController controller;

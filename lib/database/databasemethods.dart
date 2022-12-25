@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:practo_paitient/auth/continuephone.dart';
+import 'package:practo_paitient/bottom.dart';
 import 'package:practo_paitient/database/storage_methods.dart';
 import 'package:practo_paitient/models/appointment_model.dart';
 import 'package:practo_paitient/models/profile_model.dart';
@@ -11,6 +13,20 @@ import 'package:uuid/uuid.dart';
 
 class DatabaseMethods {
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
+  Future checkDocuement(String docID) async {
+    final snapShot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid) // varuId in your case
+        .get();
+
+    if (snapShot == null || !snapShot.exists) {
+      // docuement is not exist
+      print('id is not exist');
+    } else {
+      print("id is really exist");
+    }
+  }
 
 //Add Google
   Future<UserCredential> signInWithGoogle() async {
