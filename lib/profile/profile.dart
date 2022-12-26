@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:practo_paitient/bottom.dart';
 import 'package:practo_paitient/database/databasemethods.dart';
 import 'package:practo_paitient/widgets/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -55,6 +56,14 @@ class _ProfileState extends State<Profile> {
     _addressController.clear();
     _phoneController.clear();
     doctorDateofBirthContorller.clear();
+  }
+
+  _storeOnboardInfo() async {
+    print("Shared pref called");
+    int isViewed = 0;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('onBoard', isViewed);
+    print(prefs.getInt('onBoard'));
   }
 
   @override
@@ -546,6 +555,7 @@ class _ProfileState extends State<Profile> {
       _isLoading = false;
     });
     if (rse == 'success') {
+      await _storeOnboardInfo();
       Navigator.push(
         context,
         MaterialPageRoute(

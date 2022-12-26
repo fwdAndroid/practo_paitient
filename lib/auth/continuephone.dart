@@ -4,7 +4,9 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 import 'package:practo_paitient/auth/verifyphone.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:practo_paitient/bottom.dart';
 import 'package:practo_paitient/database/databasemethods.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ContinuePhone extends StatefulWidget {
   const ContinuePhone({Key? key}) : super(key: key);
@@ -15,6 +17,7 @@ class ContinuePhone extends StatefulWidget {
 
 class _ContinuePhoneState extends State<ContinuePhone> {
   final formKey = GlobalKey<FormState>();
+  int? isviewed;
 
   String dialCodeDigits = "+92";
   TextEditingController _controller = TextEditingController();
@@ -22,8 +25,6 @@ class _ContinuePhoneState extends State<ContinuePhone> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("Fawad");
-    DatabaseMethods().checkDocuement(FirebaseAuth.instance.currentUser!.uid);
   }
 
   @override
@@ -111,14 +112,36 @@ class _ContinuePhoneState extends State<ContinuePhone> {
               Container(
                 margin: EdgeInsets.only(bottom: 20),
                 child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (formKey.currentState!.validate()) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => VerifyPhone(
-                                    phone: _controller.text,
-                                    codeDigits: dialCodeDigits)));
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        isviewed = prefs.getInt('onBoard');
+                        print(isviewed);
+                        print("fawad");
+                        isviewed != 0
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) => VerifyPhone(
+                                        codeDigits: dialCodeDigits,
+                                        phone: _controller.text)))
+                            : Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) =>
+                                        MobileScreenLayout()));
+                        //  isviewed != 0 ? OnBoard() : Home(),     Navigator.push(
+                        //           context,
+                        //           MaterialPageRoute(
+                        //               builder: (builder) => VerifyPhone(
+                        //                   )));
+
+                        // isviewed != 0
+                        //     ? VerifyPhone(
+                        //         codeDigits: dialCodeDigits,
+                        //         phone: _controller.text)
+                        //     : MobileScreenLayout();
                       }
                     },
                     child: Text('Get OTP'),

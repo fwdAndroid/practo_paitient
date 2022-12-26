@@ -7,6 +7,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:practo_paitient/bottom.dart';
 import 'package:practo_paitient/database/databasemethods.dart';
 import 'package:practo_paitient/profile/profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'continuephone.dart';
 
@@ -120,7 +121,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
           Container(
             margin: EdgeInsets.only(bottom: 20),
             child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (builder) => Profile()));
                 },
@@ -178,4 +179,6 @@ class _VerifyPhoneState extends State<VerifyPhone> {
     await DatabaseMethods().numberAdd();
     // .then((value) => Customdialog.closeDialog(context));
   }
+
+  
 }

@@ -2,6 +2,7 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:practo_paitient/globalvariable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
 
   @override
   void initState() {
+    
     super.initState();
     _pageController = PageController();
   }
@@ -25,6 +27,8 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     _pageController.dispose();
     super.dispose();
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
