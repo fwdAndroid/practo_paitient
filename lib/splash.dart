@@ -11,6 +11,7 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+  
   @override
   void initState() {
     // TODO: implement initState

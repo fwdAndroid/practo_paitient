@@ -114,23 +114,12 @@ class _ContinuePhoneState extends State<ContinuePhone> {
                 child: ElevatedButton(
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        isviewed = prefs.getInt('onBoard');
-                        print(isviewed);
-                        print("fawad");
-                        isviewed != 0
-                            ? Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (builder) => VerifyPhone(
-                                        codeDigits: dialCodeDigits,
-                                        phone: _controller.text)))
-                            : Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (builder) =>
-                                        MobileScreenLayout()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => VerifyPhone(
+                                    codeDigits: dialCodeDigits,
+                                    phone: _controller.text)));
                         //  isviewed != 0 ? OnBoard() : Home(),     Navigator.push(
                         //           context,
                         //           MaterialPageRoute(
