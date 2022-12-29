@@ -1,4 +1,3 @@
-import 'package:booking_calendar/booking_calendar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

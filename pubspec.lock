@@ -78,13 +78,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  booking_calendar:
-    dependency: "direct main"
-    description:
-      name: booking_calendar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.7"
   boolean_selector:
     dependency: transitive
     description:
@@ -218,13 +211,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
-  dots_indicator:
-    dependency: transitive
-    description:
-      name: dots_indicator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.0"
   encrypt:
     dependency: transitive
     description:
@@ -434,13 +420,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  get:
-    dependency: "direct main"
-    description:
-      name: get
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.6.5"
   google_fonts:
     dependency: "direct main"
     description:
@@ -553,13 +532,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
-  introduction_screen:
-    dependency: "direct main"
-    description:
-      name: introduction_screen
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.2"
   js:
     dependency: transitive
     description:
@@ -616,13 +588,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.4"
-  nested:
-    dependency: transitive
-    description:
-      name: nested
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   octo_image:
     dependency: transitive
     description:
@@ -805,41 +770,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
-  provider:
-    dependency: transitive
-    description:
-      name: provider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "6.0.5"
-  quick_actions:
-    dependency: "direct main"
-    description:
-      name: quick_actions
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
-  quick_actions_android:
-    dependency: transitive
-    description:
-      name: quick_actions_android
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
-  quick_actions_ios:
-    dependency: transitive
-    description:
-      name: quick_actions_ios
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
-  quick_actions_platform_interface:
-    dependency: transitive
-    description:
-      name: quick_actions_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
   quiver:
     dependency: transitive
     description:
@@ -910,13 +840,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.2"
-  simple_gesture_detector:
-    dependency: transitive
-    description:
-      name: simple_gesture_detector
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -999,13 +922,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0+3"
-  table_calendar:
-    dependency: transitive
-    description:
-      name: table_calendar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.8"
   term_glyph:
     dependency: transitive
     description:

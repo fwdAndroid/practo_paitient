@@ -131,8 +131,8 @@ class _HospitalChatRoomState extends State<HospitalChatRoom> {
                       context,
                       MaterialPageRoute(
                           builder: (builder) => HospitalVideoCall(
-                                paitientname: widget.paitientname,
                                 callingId: widget.hospitalId,
+                                paitientname: widget.paitientname,
                               )));
                 },
                 icon: Icon(

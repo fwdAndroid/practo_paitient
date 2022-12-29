@@ -27,7 +27,6 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  booking_calendar: ^1.1.6
   bottom_navy_bar: ^6.0.0
   cached_network_image: ^3.2.3
   cloud_firestore: ^4.3.0
@@ -44,16 +43,13 @@ dependencies:
   flutter_share: ^2.0.0
   flutter_tabler_icons: ^1.1.2
   form_field_validator: ^1.1.0
-  get: ^4.6.5
   google_fonts: ^3.0.1
   google_nav_bar: ^5.0.6
   google_sign_in: ^5.4.2
   image_picker: ^0.8.5+3
   intl_phone_field: ^3.1.0
-  introduction_screen: ^3.0.2
   phone_form_field: ^7.0.2
   pin_code_fields: ^7.4.0
-  quick_actions: ^1.0.1
   shared_preferences: ^2.0.15
   speech_to_text: ^6.1.0
   toast: ^0.3.0
