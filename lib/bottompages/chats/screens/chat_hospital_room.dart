@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:practo_paitient/bottompages/chats/screens/hospitak_video_chat.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -126,8 +127,13 @@ class _HospitalChatRoomState extends State<HospitalChatRoom> {
           actions: [
             IconButton(
                 onPressed: () {
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (builder) => MeetingScreen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (builder) => HospitalVideoCall(
+                                paitientname: widget.paitientname,
+                                callingId: widget.hospitalId,
+                              )));
                 },
                 icon: Icon(
                   Icons.video_call,

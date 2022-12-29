@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:calender_picker/date_picker_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:practo_paitient/doctors/appointment/confrim_appointment.dart';
 import 'package:practo_paitient/doctors/appointment/paitent_detaills.dart';
