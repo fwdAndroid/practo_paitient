@@ -1,1 +1,1 @@
-export './all_chat.dart';
+export 'all_hospital_chat.dart';

@@ -3,29 +3,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:practo_paitient/bottompages/chats/videochat/meeting_screen.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-class ChatRoom extends StatefulWidget {
-  String doctorId;
-  String doctorName;
+class HospitalChatRoom extends StatefulWidget {
+  String hospitalId;
+  String hospitalName;
   String paitientname;
   String paitientid;
-  ChatRoom({
+  HospitalChatRoom({
     Key? key,
     required this.paitientid,
     required this.paitientname,
-    required this.doctorName,
-    required this.doctorId,
+    required this.hospitalId,
+    required this.hospitalName,
   }) : super(key: key);
 
   @override
-  State<ChatRoom> createState() => _ChatRoomState();
+  State<HospitalChatRoom> createState() => _HospitalChatRoomState();
 }
 
-class _ChatRoomState extends State<ChatRoom> {
+class _HospitalChatRoomState extends State<HospitalChatRoom> {
   String groupChatId = "";
   ScrollController scrollController = ScrollController();
   final ImagePicker _picker = ImagePicker();
@@ -48,7 +47,7 @@ class _ChatRoomState extends State<ChatRoom> {
           documentReference,
           {
             "senderId": FirebaseAuth.instance.currentUser!.uid,
-            "reciverId": widget.doctorId,
+            "reciverId": widget.hospitalId,
             // "content": messageController.text,
             "time": DateTime.now(),
             'image': imageLink,
@@ -68,12 +67,12 @@ class _ChatRoomState extends State<ChatRoom> {
   void initState() {
     // TODO: implement initState
     if (FirebaseAuth.instance.currentUser!.uid.hashCode <=
-        widget.doctorId.hashCode) {
+        widget.hospitalId.hashCode) {
       groupChatId =
-          "${FirebaseAuth.instance.currentUser!.uid}-${widget.doctorId}";
+          "${FirebaseAuth.instance.currentUser!.uid}-${widget.hospitalId}";
     } else {
       groupChatId =
-          "${widget.doctorId}-${FirebaseAuth.instance.currentUser!.uid}";
+          "${widget.hospitalId}-${FirebaseAuth.instance.currentUser!.uid}";
     }
     // FirebaseFirestore.instance.collection("users").doc(widget.doctorId).get().then((value) {
     //   setState(() {
@@ -84,7 +83,7 @@ class _ChatRoomState extends State<ChatRoom> {
     var a = FirebaseFirestore.instance.collection("collectionPath");
     FirebaseFirestore.instance
         .collection("users")
-        .doc(widget.doctorId)
+        .doc(widget.hospitalId)
         .get()
         .then((value) {
       setState(() {
@@ -106,7 +105,7 @@ class _ChatRoomState extends State<ChatRoom> {
           title: Column(
             children: [
               Text(
-                widget.doctorName,
+                widget.hospitalName,
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -127,8 +126,8 @@ class _ChatRoomState extends State<ChatRoom> {
           actions: [
             IconButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (builder) => MeetingScreen()));
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (builder) => MeetingScreen()));
                 },
                 icon: Icon(
                   Icons.video_call,
@@ -312,7 +311,7 @@ class _ChatRoomState extends State<ChatRoom> {
           documentReference,
           {
             "senderId": FirebaseAuth.instance.currentUser!.uid,
-            "receiverId": widget.doctorId,
+            "receiverId": widget.hospitalId,
             "time": DateTime.now(),
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             'content': content,
