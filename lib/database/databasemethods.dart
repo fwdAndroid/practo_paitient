@@ -7,6 +7,7 @@ import 'package:practo_paitient/auth/continuephone.dart';
 import 'package:practo_paitient/bottom.dart';
 import 'package:practo_paitient/database/storage_methods.dart';
 import 'package:practo_paitient/models/appointment_model.dart';
+import 'package:practo_paitient/models/doctor_appointment_model.dart';
 import 'package:practo_paitient/models/profile_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -150,6 +151,44 @@ class DatabaseMethods {
 
       await firebaseFirestore
           .collection('hospital_appointment')
+          .doc("details")
+          .collection("records")
+          .doc(dooc)
+          .set(userModel.toJson());
+      res = 'success';
+    } catch (e) {
+      res = e.toString();
+    }
+    return res;
+  }
+
+  //Doctor Appointment
+  Future<String> doctormakeAppointment({
+    String? name,
+    String? age,
+    String? problem,
+    required String gender,
+    String? date,
+    String? time,
+    String? uid,
+  }) async {
+    String res = 'Some error occured';
+    var dooc = Uuid().v1();
+
+    try {
+      DoctorModel userModel = DoctorModel(
+          id: uid!,
+          uuid: dooc,
+          name: name.toString(),
+          status: "pending",
+          age: age.toString(),
+          problem: problem.toString(),
+          date: date.toString(),
+          time: time.toString(),
+          gender: gender);
+
+      await firebaseFirestore
+          .collection('doctor_appointment')
           .doc("details")
           .collection("records")
           .doc(dooc)
