@@ -27,8 +27,6 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  bottom_navy_bar: ^6.0.0
-  cached_network_image: ^3.2.3
   cloud_firestore: ^4.3.0
   country_code_picker: ^2.0.2
   cupertino_icons: ^1.0.2
@@ -41,14 +39,12 @@ dependencies:
   flutter_credit_card: ^3.0.4
   flutter_rating_bar: ^4.0.1
   flutter_share: ^2.0.0
-  flutter_tabler_icons: ^1.1.2
   form_field_validator: ^1.1.0
   google_fonts: ^3.0.1
   google_nav_bar: ^5.0.6
   google_sign_in: ^5.4.2
   image_picker: ^0.8.5+3
-  intl_phone_field: ^3.1.0
-  phone_form_field: ^7.0.2
+  
   pin_code_fields: ^7.4.0
   shared_preferences: ^2.0.15
   speech_to_text: ^6.1.0
@@ -58,6 +54,9 @@ dependencies:
   permission_handler: ^10.2.0
   zego_uikit_prebuilt_call: ^1.2.14
   zego_uikit_signaling_plugin: ^1.0.7 
+  cached_network_image: ^3.2.3
+  bottom_navy_bar: ^6.0.0
+  phone_form_field: ^7.0.5
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:
