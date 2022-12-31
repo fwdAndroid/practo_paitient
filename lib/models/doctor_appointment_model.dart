@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 class DoctorModel {
   final String status;
   final String id;
+  final String doctorid;
   final String problem;
   final String name;
   final String age;
@@ -22,6 +23,7 @@ class DoctorModel {
     required this.age,
     required this.date,
     required this.time,
+    required this.doctorid,
     required this.gender,
   });
 
@@ -35,6 +37,7 @@ class DoctorModel {
         'age': age,
         'date': date,
         'time': time,
+        'doctorid': doctorid,
         'gender': gender
       };
 
@@ -49,6 +52,7 @@ class DoctorModel {
         age: snapshot['age'] ?? '',
         date: snapshot['date'] ?? '',
         time: snapshot['time'] ?? '',
+        doctorid: snapshot['doctorid'] ?? '',
         gender: snapshot['gender'] ?? '',
         uuid: snapshot['uuid']);
   }

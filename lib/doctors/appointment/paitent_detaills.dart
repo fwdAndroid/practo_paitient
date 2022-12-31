@@ -75,6 +75,7 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.id);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -254,6 +255,7 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
       time: timeController.text,
       date: dateController.text,
       problem: problem.text,
+      doctorid: widget.id,
       age: age.text,
       name: nameController.text,
       gender: genderController.text,
@@ -273,7 +275,9 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (builder) => TimeSelction(),
+          builder: (builder) => TimeSelction(
+            id: widget.id,
+          ),
         ),
       );
     } else {
