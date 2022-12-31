@@ -30,45 +30,11 @@ class _HospitalChatRoomState extends State<HospitalChatRoom> {
   ScrollController scrollController = ScrollController();
   final ImagePicker _picker = ImagePicker();
   File? imageUrl;
-  File? file;
   PlatformFile? platformFile;
 
   TextEditingController messageController = TextEditingController();
   String? imageLink, fileLink;
   firebase_storage.UploadTask? uploadTask;
-
-  void addImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      imageUrl = File(image!.path);
-    });
-    await uploadImageToFirebase().then((value) {
-      var documentReference = FirebaseFirestore.instance
-          .collection('messages')
-          .doc(groupChatId)
-          .collection(groupChatId)
-          .doc(DateTime.now().millisecondsSinceEpoch.toString());
-      FirebaseFirestore.instance.runTransaction((transaction) async {
-        await transaction.set(
-          documentReference,
-          {
-            "senderId": FirebaseAuth.instance.currentUser!.uid,
-            "reciverId": widget.hospitalId,
-            // "content": messageController.text,
-            "time": DateTime.now(),
-            'image': imageLink,
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-            // 'content': content,
-            "file": "",
-            'type': 1,
-          },
-        );
-      });
-    }).then((value) {
-      FocusScope.of(context).unfocus();
-      messageController.clear();
-    });
-  }
 
   @override
   void initState() {
@@ -385,6 +351,7 @@ class _HospitalChatRoomState extends State<HospitalChatRoom> {
           ),
         ));
   }
+  //Functions
 
   void sendMessage(String content, int type) {
     // type: 0 = text, 1 = image, 2 = sticker
@@ -436,61 +403,6 @@ class _HospitalChatRoomState extends State<HospitalChatRoom> {
     });
   }
 
-  upload() async {
-    File? fileName = file;
-    var uuid = Uuid();
-    firebase_storage.Reference firebaseStorageRef = firebase_storage
-        .FirebaseStorage.instance
-        .ref()
-        .child('messages/files+${uuid.v4()}');
-    firebase_storage.UploadTask uploadTask =
-        firebaseStorageRef.putFile(fileName!);
-    firebase_storage.TaskSnapshot taskSnapshot =
-        await uploadTask.whenComplete(() async {
-      print(fileName);
-      String img = await uploadTask.snapshot.ref.getDownloadURL();
-      setState(() {
-        fileLink = img;
-      });
-    });
-  }
-
-  void uploadfile() async {
-    final result = await FilePicker.platform.pickFiles();
-
-    if (result == null) return;
-
-    setState(() {
-      platformFile = result.files.first;
-    });
-    await upload().then((value) {
-      var documentReference = FirebaseFirestore.instance
-          .collection('messages')
-          .doc(groupChatId)
-          .collection(groupChatId)
-          .doc(DateTime.now().millisecondsSinceEpoch.toString());
-      FirebaseFirestore.instance.runTransaction((transaction) async {
-        await transaction.set(
-          documentReference,
-          {
-            "senderId": FirebaseAuth.instance.currentUser!.uid,
-            "reciverId": widget.hospitalId,
-            // "content": messageController.text,
-            "time": DateTime.now(),
-            'image': "",
-            "file": fileLink,
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-            // 'content': content,
-            'type': 2,
-          },
-        );
-      });
-    }).then((value) {
-      FocusScope.of(context).unfocus();
-      messageController.clear();
-    });
-  }
-
   //Chat Widgets
   Widget buildProgress() => StreamBuilder<firebase_storage.TaskSnapshot>(
       stream: uploadTask?.snapshotEvents,
@@ -521,4 +433,92 @@ class _HospitalChatRoomState extends State<HospitalChatRoom> {
           );
         }
       });
+
+  void addImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      imageUrl = File(image!.path);
+    });
+    await uploadImageToFirebase().then((value) {
+      var documentReference = FirebaseFirestore.instance
+          .collection('messages')
+          .doc(groupChatId)
+          .collection(groupChatId)
+          .doc(DateTime.now().millisecondsSinceEpoch.toString());
+      FirebaseFirestore.instance.runTransaction((transaction) async {
+        await transaction.set(
+          documentReference,
+          {
+            "senderId": FirebaseAuth.instance.currentUser!.uid,
+            "reciverId": widget.hospitalId,
+            // "content": messageController.text,
+            "time": DateTime.now(),
+            'image': imageLink,
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+            // 'content': content,
+            "file": "",
+            'type': 1,
+          },
+        );
+      });
+    }).then((value) {
+      FocusScope.of(context).unfocus();
+      messageController.clear();
+    });
+  }
+
+//FIle Related
+  Future uploadFileToFirebase() async {
+    File? fileName = imageUrl;
+    var uuid = Uuid();
+    firebase_storage.Reference firebaseStorageRef = firebase_storage
+        .FirebaseStorage.instance
+        .ref()
+        .child('messages/files+${uuid.v4()}');
+    firebase_storage.UploadTask uploadTask =
+        firebaseStorageRef.putFile(fileName!);
+    firebase_storage.TaskSnapshot taskSnapshot =
+        await uploadTask.whenComplete(() async {
+      print(fileName);
+      String img = await uploadTask.snapshot.ref.getDownloadURL();
+      setState(() {
+        fileLink = img;
+      });
+    });
+  }
+
+  void uploadfile() async {
+    final result = await FilePicker.platform.pickFiles();
+
+    if (result == null) return;
+    setState(() {
+      platformFile = result.files.first;
+    });
+    await uploadFileToFirebase().then((value) {
+      var documentReference = FirebaseFirestore.instance
+          .collection('messages')
+          .doc(groupChatId)
+          .collection(groupChatId)
+          .doc(DateTime.now().millisecondsSinceEpoch.toString());
+      FirebaseFirestore.instance.runTransaction((transaction) async {
+        await transaction.set(
+          documentReference,
+          {
+            "senderId": FirebaseAuth.instance.currentUser!.uid,
+            "reciverId": widget.hospitalId,
+            // "content": messageController.text,
+            "time": DateTime.now(),
+            'image': "",
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+            // 'content': content,
+            "file": fileLink,
+            'type': 2,
+          },
+        );
+      });
+    }).then((value) {
+      FocusScope.of(context).unfocus();
+      messageController.clear();
+    });
+  }
 }
