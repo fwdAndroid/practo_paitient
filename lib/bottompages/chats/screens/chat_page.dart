@@ -1,3 +1,5 @@
+import 'package:practo_paitient/bottompages/chats/widgets/all_doctor_chat.dart';
+
 import '../widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -56,15 +58,10 @@ class _ChatPageState extends State<ChatPage> {
               child: Card(
                 child: ListTile(
                   onTap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (builder) => AllDoctorChat(
-                    //               doctorName: widget.doctorName,
-                    //               doctorId: widget.doctorId,
-                    //               userid: widget.userid,
-                    //               name: widget.name,
-                    //             )));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => AllDoctorChat()));
                   },
                   // ignore: prefer_const_constructors
                   leading: CircleAvatar(

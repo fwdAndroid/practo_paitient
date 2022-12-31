@@ -163,15 +163,15 @@ class DatabaseMethods {
   }
 
   //Doctor Appointment
-  Future<String> doctormakeAppointment({
-    String? name,
-    String? age,
-    String? problem,
-    required String gender,
-    String? date,
-    String? time,
-    String? uid,
-  }) async {
+  Future<String> doctormakeAppointment(
+      {String? name,
+      String? age,
+      String? problem,
+      required String gender,
+      String? date,
+      String? time,
+      String? uid,
+      required String doctorid}) async {
     String res = 'Some error occured';
     var dooc = Uuid().v1();
 
@@ -181,6 +181,7 @@ class DatabaseMethods {
           uuid: dooc,
           name: name.toString(),
           status: "pending",
+          doctorid: doctorid,
           age: age.toString(),
           problem: problem.toString(),
           date: date.toString(),
