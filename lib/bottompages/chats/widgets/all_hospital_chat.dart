@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uuid/uuid.dart';
 
 import '../screens/chat_hospital_room.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,16 +9,6 @@ import 'package:flutter/material.dart';
 import '../app_theme.dart';
 
 class AllHospitalChat extends StatefulWidget {
-  final userid;
-  final hospitalid;
-  final hospitalName;
-  final name;
-  AllHospitalChat(
-      {required this.hospitalid,
-      required this.userid,
-      required this.name,
-      required this.hospitalName});
-
   @override
   State<AllHospitalChat> createState() => _AllHospitalChatState();
 }
@@ -25,6 +16,8 @@ class AllHospitalChat extends StatefulWidget {
 class _AllHospitalChatState extends State<AllHospitalChat> {
   @override
   Widget build(BuildContext context) {
+    var uuid = Uuid().v1();
+    print("fawad");
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -54,12 +47,16 @@ class _AllHospitalChatState extends State<AllHospitalChat> {
               padding: const EdgeInsets.all(2.0),
               child: StreamBuilder(
                   stream: FirebaseFirestore.instance
-                      .collection("appointments")
+                      .collection("hospital_appointment")
                       .doc("details")
                       .collection("records")
-                      .where("status", isEqualTo: "start")
                       .where("id",
                           isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                      .where("status", isEqualTo: "start")
+                      // .where("hospitalid",
+                      //     isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+
+                      //  .where("hospitalid", isEqualTo: )
                       .snapshots(includeMetadataChanges: true),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError) {
@@ -84,7 +81,8 @@ class _AllHospitalChatState extends State<AllHospitalChat> {
                                     CupertinoPageRoute(builder: (context) {
                                   return HospitalChatRoom(
                                     hospitalName:
-                                        documentSnapshot['hospitalName'],
+                                        documentSnapshot['hospitalName'] ??
+                                            documentSnapshot['doctorName'],
                                     paitientid: documentSnapshot['id'],
                                     hospitalId: documentSnapshot['hospitalid'],
                                     paitientname: documentSnapshot['name'],
@@ -104,15 +102,16 @@ class _AllHospitalChatState extends State<AllHospitalChat> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                                documentSnapshot[
-                                                    'hospitalName'],
+                                                documentSnapshot['hospitalName']
+                                                    .toString(),
                                                 style: TextStyle(
                                                     color: Color(0xff858585),
                                                     fontSize: 14,
                                                     fontWeight:
                                                         FontWeight.w400)),
                                             Text(
-                                              documentSnapshot['name'],
+                                              documentSnapshot['name']
+                                                  .toString(),
                                               style: MyTheme.heading2.copyWith(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w400),

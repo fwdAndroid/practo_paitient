@@ -2,21 +2,9 @@ import '../widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatefulWidget {
-  final hospitalId;
-  final userid;
-  final name;
-  final hospitalName;
-  final doctorId;
-  final doctorName;
-  ChatPage(
-      {Key? key,
-      this.doctorId,
-      this.doctorName,
-       this.hospitalId,
-       this.hospitalName,
-      required this.userid,
-      required this.name})
-      : super(key: key);
+  ChatPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -48,12 +36,7 @@ class _ChatPageState extends State<ChatPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (builder) => AllHospitalChat(
-                                  hospitalName: widget.hospitalName,
-                                  hospitalid: widget.hospitalId,
-                                  userid: widget.userid,
-                                  name: widget.name,
-                                )));
+                            builder: (builder) => AllHospitalChat()));
                   },
                   // ignore: prefer_const_constructors
                   leading: CircleAvatar(
@@ -72,6 +55,17 @@ class _ChatPageState extends State<ChatPage> {
               margin: EdgeInsets.only(left: 20, right: 20),
               child: Card(
                 child: ListTile(
+                  onTap: () {
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (builder) => AllDoctorChat(
+                    //               doctorName: widget.doctorName,
+                    //               doctorId: widget.doctorId,
+                    //               userid: widget.userid,
+                    //               name: widget.name,
+                    //             )));
+                  },
                   // ignore: prefer_const_constructors
                   leading: CircleAvatar(
                     backgroundImage: AssetImage("asset/teeth.png"),

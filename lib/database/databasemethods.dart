@@ -107,10 +107,6 @@ class DatabaseMethods {
             .doc(uid)
             .update(userModel.toJson());
 
-     
-
-        
-
         res = 'success';
       }
     } catch (e) {
@@ -119,36 +115,22 @@ class DatabaseMethods {
     return res;
   }
 
-  void updateMedicalRecoders(
-      BuildContext context, String messageId, String medicalRecordes) async {
-    try {
-      await firebaseFirestore
-          .collection('appointments')
-          .doc("details")
-          .collection(FirebaseAuth.instance.currentUser!.uid)
-          .doc(messageId)
-          .update({'medicalRecordsImages': medicalRecordes});
-    } catch (e) {}
-  }
-
-  var ss = Uuid().v1();
-
-  //Appointment
-  Future<String> makeAppointment(
-      {String? name,
-      String? age,
-      String? problem,
-      String? gender,
-      String? date,
-      String? time,
-      String? hospitalId,
-      String? hospitalName,
-      String? hospitalAddress,
-      String? hospitalEmail,
-      String? doctorId,
-      String? uid,
-      String? doctorName}) async {
+  //Appointment_hospital
+  Future<String> makeAppointment({
+    String? name,
+    String? age,
+    String? problem,
+    String? gender,
+    String? date,
+    String? time,
+    String? hospitalId,
+    String? hospitalName,
+    String? hospitalAddress,
+    String? hospitalEmail,
+    String? uid,
+  }) async {
     String res = 'Some error occured';
+    var dooc = Uuid().v1();
 
     try {
       Appointmentmodel userModel = Appointmentmodel(
@@ -157,19 +139,17 @@ class DatabaseMethods {
         hospitalName: hospitalName,
         hospitalemail: hospitalEmail,
         id: uid!,
-        doctorid: doctorId.toString(),
+        uuid: dooc,
         name: name.toString(),
         status: "pending",
         age: age.toString(),
         problem: problem.toString(),
         date: date.toString(),
         time: time.toString(),
-        doctorName: doctorName.toString(),
       );
 
-      var dooc = Uuid().v1();
       await firebaseFirestore
-          .collection('appointments')
+          .collection('hospital_appointment')
           .doc("details")
           .collection("records")
           .doc(dooc)

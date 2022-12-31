@@ -301,63 +301,63 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                   SizedBox(
                     height: 50,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Center(
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        child: ElevatedButton(
-                            onPressed: makeAppointment,
-                            child: _isLoading == true
-                                ? const Center(
-                                    child: CircularProgressIndicator.adaptive(),
-                                  )
-                                : Text('Continue'),
-                            style: ElevatedButton.styleFrom(
-                                shape: StadiumBorder(),
-                                primary: Color(0xfff0092E1),
-                                fixedSize: Size(330, 50))),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(4.0),
+                  //   child: Center(
+                  //     child: Container(
+                  //       margin: EdgeInsets.only(bottom: 10),
+                  //       child: ElevatedButton(
+                  //           onPressed: makeAppointment,
+                  //           child: _isLoading == true
+                  //               ? const Center(
+                  //                   child: CircularProgressIndicator.adaptive(),
+                  //                 )
+                  //               : Text('Continue'),
+                  //           style: ElevatedButton.styleFrom(
+                  //               shape: StadiumBorder(),
+                  //               primary: Color(0xfff0092E1),
+                  //               fixedSize: Size(330, 50))),
+                  //     ),
+                  //   ),
+                  // ),
                 ]);
           }),
     );
   }
 
-  void makeAppointment() async {
-    setState(() {
-      _isLoading = true;
-    });
-    String res = await DatabaseMethods().makeAppointment(
-        time: timeController.text,
-        date: dateController.text,
-        problem: problem.text,
-        age: age.text,
-        name: nameController.text,
-        gender: genderController.text,
-        uid: FirebaseAuth.instance.currentUser!.uid,
-        doctorId: widget.id,
-        doctorName: widget.doctorName
-        // medicalRecords: []
-        // doctorid: FirebaseFirestore.instance
-        //     .collection("doctorProfile")
-        //     .doc(FirebaseAuth.instance.currentUser!.uid)
-        );
+  // void makeAppointment() async {
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //   String res = await DatabaseMethods().makeAppointment(
+  //       time: timeController.text,
+  //       date: dateController.text,
+  //       problem: problem.text,
+  //       age: age.text,
+  //       name: nameController.text,
+  //       gender: genderController.text,
+  //       uid: FirebaseAuth.instance.currentUser!.uid,
+  //       doctorId: widget.id,
+  //       doctorName: widget.doctorName
+  //       // medicalRecords: []
+  //       // doctorid: FirebaseFirestore.instance
+  //       //     .collection("doctorProfile")
+  //       //     .doc(FirebaseAuth.instance.currentUser!.uid)
+  //       );
 
-    print(res);
-    setState(() {
-      _isLoading = false;
-    });
-    if (res == 'success') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (builder) => MedicalRecords(),
-        ),
-      );
-    } else {
-      showSnakBar(res, context);
-    }
-  }
+  //   print(res);
+  //   setState(() {
+  //     _isLoading = false;
+  //   });
+  //   if (res == 'success') {
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (builder) => MedicalRecords(),
+  //       ),
+  //     );
+  //   } else {
+  //     showSnakBar(res, context);
+  //   }
+  // }
 }
