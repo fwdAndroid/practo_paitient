@@ -1,10 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FavouriteDoctor extends StatefulWidget {
-  const FavouriteDoctor({Key? key}) : super(key: key);
+  final String? photorul;
+  final String? doctorName;
+  final String? doctorDescription;
+  FavouriteDoctor(
+      {Key? key, this.doctorDescription, this.photorul, this.doctorName})
+      : super(key: key);
 
   @override
   State<FavouriteDoctor> createState() => _FavouriteDoctorState();
@@ -24,55 +32,59 @@ class _FavouriteDoctorState extends State<FavouriteDoctor> {
         ),
         backgroundColor: Colors.white,
       ),
-      body: ListView.builder(itemBuilder: (BuildContext context, int index) {
-        return Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Card(
-            child: ListTile(
-                leading: Image.asset("asset/doctor.png"),
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Dr.Shang chi",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
-                    RatingBarIndicator(
-                      rating: 8.2,
-                      itemCount: 5,
-                      itemSize: 18.0,
-                      physics: BouncingScrollPhysics(),
-                      itemBuilder: (context, _) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                    ),
-                  ],
-                ),
-                trailing: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Container(
-                      // margin: EdgeInsets.symmetric(horizontal: 10),
-                      width: 50,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Color(0xffE4ECFE),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Icon(
-                        Icons.favorite,
-                        color: Color(0xff1060D7),
-                        // size: 15,
-                      )),
-                ),
-                subtitle: Text(
-                  "Cardio Spacialist: Smithy London Hospital",
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
-                )),
-          ),
-        );
-      }),
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection("doctorsprofile").where(
+              'likes',
+              isEqualTo: [FirebaseAuth.instance.currentUser!.uid]).snapshots(),
+          builder: (context,
+              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+            return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (BuildContext ctx, index) {
+                  Map<String, dynamic> snap =
+                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                  return InkWell(
+                    onTap: () {},
+                    child: Container(
+                        width: MediaQuery.of(context).size.height,
+                        child: Card(
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                snap['doctorPhotoURL'],
+                              ),
+                            ),
+                            title: SizedBox(
+                              child: Text(
+                                snap['doctorName'],
+                                style: GoogleFonts.getFont(
+                                  'Rubik',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xff000000),
+                                ),
+                              ),
+                            ),
+                            subtitle: SizedBox(
+                              child: Text(
+                                snap['doctorDesc'],
+                                style: GoogleFonts.getFont(
+                                  'Rubik',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff000000),
+                                ),
+                              ),
+                            ),
+                            trailing: Icon(
+                              Icons.favorite,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )),
+                  );
+                });
+          }),
     );
   }
 }

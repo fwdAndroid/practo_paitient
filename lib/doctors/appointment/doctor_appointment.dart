@@ -9,7 +9,6 @@ import 'package:practo_paitient/doctors/appointment/confrim_appointment.dart';
 import 'package:practo_paitient/doctors/appointment/paitent_detaills.dart';
 import 'package:practo_paitient/doctors/favourite_doctor.dart';
 import 'package:practo_paitient/widgets/like_animation.dart';
-import 'package:like_button/like_button.dart';
 
 class Doctor_Appointment extends StatefulWidget {
   String? id;
@@ -76,7 +75,11 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (builder) => MobileScreenLayout()));
+                            builder: (builder) => FavouriteDoctor(
+                                  photorul: widget.image,
+                                  doctorDescription: widget.description,
+                                  doctorName: widget.name,
+                                )));
                   });
                 },
                 icon: widget.likes
