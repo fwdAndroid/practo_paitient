@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import '../app_theme.dart';
 
 class AllDoctorChat extends StatefulWidget {
+  final doctorid;
+  AllDoctorChat({required this.doctorid});
   @override
   State<AllDoctorChat> createState() => _AllDoctorChatState();
 }
@@ -20,30 +22,20 @@ class _AllDoctorChatState extends State<AllDoctorChat> {
     var uuid = Uuid().v1();
     print("fawad");
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
+        elevation: 1,
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        title: Text(
+          "Mesasages",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.search),
-                  border: InputBorder.none,
-                  hintText: 'Search through Matches',
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                margin: EdgeInsets.only(left: 10),
-                child: Text(
-                  "Messages",
-                  textAlign: TextAlign.left,
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.all(2.0),
               child: StreamBuilder(
@@ -53,7 +45,7 @@ class _AllDoctorChatState extends State<AllDoctorChat> {
                       .collection("records")
                       .where("id",
                           isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                      .where("status", isEqualTo: "start")
+                      .where("doctorid", isEqualTo: widget.doctorid)
                       // .where("hospitalid",
                       //     isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
 
