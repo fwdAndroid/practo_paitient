@@ -201,6 +201,26 @@ class DatabaseMethods {
     return res;
   }
 
-  //Save SHared Preferenc
-
+//Like Doctor
+  Future<void> likePosts(String uid, List likes) async {
+    try {
+      if (likes.contains(uid)) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({
+          "likes": FieldValue.arrayRemove([uid])
+        });
+      } else {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({
+          "likes": FieldValue.arrayUnion([uid])
+        });
+      }
+    } catch (E) {
+      print(E.toString());
+    }
+  }
 }

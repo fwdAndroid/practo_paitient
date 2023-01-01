@@ -30,7 +30,7 @@ class ProfileModel {
         'photoURL': photoURL,
         'gender': gender,
         'address': address,
-        'dob': dob
+        'dob': dob,
       };
 
   ///
@@ -39,7 +39,7 @@ class ProfileModel {
 
     return ProfileModel(
         gender: snapshot['gender'],
-        name:  snapshot['name'],
+        name: snapshot['name'],
         uid: snapshot['uid'],
         email: snapshot['email'],
         photoURL: snapshot['photoURL'],

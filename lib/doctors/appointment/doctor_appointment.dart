@@ -3,9 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:practo_paitient/bottom.dart';
+import 'package:practo_paitient/database/databasemethods.dart';
 import 'package:practo_paitient/doctors/appointment/confrim_appointment.dart';
 import 'package:practo_paitient/doctors/appointment/paitent_detaills.dart';
 import 'package:practo_paitient/doctors/favourite_doctor.dart';
+import 'package:practo_paitient/widgets/like_animation.dart';
+import 'package:like_button/like_button.dart';
 
 class Doctor_Appointment extends StatefulWidget {
   String? id;
@@ -17,9 +21,11 @@ class Doctor_Appointment extends StatefulWidget {
   String? address;
   String? doctorName;
   List<dynamic>? images;
+  final likes;
 
   Doctor_Appointment(
       {Key? key,
+      required this.likes,
       this.id,
       this.image,
       this.specialization,
@@ -39,8 +45,10 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
   var ispressed;
   var sss;
   int days = 10;
+  int currentTab = 0; // to keep track of active tab index
   @override
   Widget build(BuildContext context) {
+    print(widget.id);
     var snapsl;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -53,22 +61,46 @@ class _Doctor_AppointmentState extends State<Doctor_Appointment> {
           ),
           backgroundColor: Colors.white,
           actions: [
-            //   IconButton(
-            //       icon: Icon(Icons.favorite_border,
-            //           color: ispressed ? Color(0xff1060D7) : Colors.green),
-            //       onPressed: () async {
-            //         await FirebaseFirestore.instance
-            //             .collection("doctorsprofile")
-            //             .doc(snapsl.id)
-            //             .update({"like": true}).whenComplete(() => {
-            //                   Navigator.push(
-            //                       context,
-            //                       MaterialPageRoute(
-            //                           builder: (builder) => FavouriteDoctor()))
-            //                 });
-            //       }),
-            // ],]
+            LikeAnimation(
+              smallLike: true,
+              isAnimating: widget.likes.contains(widget.id),
+              child: IconButton(
+                onPressed: () async {
+                  await FirebaseFirestore.instance
+                      .collection("doctorsprofile")
+                      .doc(widget.id)
+                      .update({
+                    "likes": FieldValue.arrayUnion(
+                        [FirebaseAuth.instance.currentUser!.uid])
+                  }).then((value) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => MobileScreenLayout()));
+                  });
+                },
+                icon: widget.likes
+                        .contains(FirebaseAuth.instance.currentUser!.uid)
+                    ? Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                      )
+                    : Icon(
+                        Icons.favorite,
+                        color: Colors.black,
+                      ),
+              ),
+            )
           ]),
+
+      // IconButton(
+      //     onPressed: () async {
+
+      //     },
+      //     icon: Icon(
+      //       Icons.favorite,
+      //       color: currentTab == 0 ? Colors.red : Colors.black,
+
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
