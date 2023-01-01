@@ -6,14 +6,15 @@ import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-class Pending extends StatefulWidget {
-  const Pending({super.key});
+class DoctorPendingAppointment extends StatefulWidget {
+  const DoctorPendingAppointment({super.key});
 
   @override
-  State<Pending> createState() => _PendingState();
+  State<DoctorPendingAppointment> createState() =>
+      _DoctorPendingAppointmentState();
 }
 
-class _PendingState extends State<Pending> {
+class _DoctorPendingAppointmentState extends State<DoctorPendingAppointment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,16 +22,16 @@ class _PendingState extends State<Pending> {
         child: FirebaseAuth.instance.currentUser != null
             ? StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection('hospital_appointment')
+                    .collection('doctor_appointment')
                     .doc("details")
                     .collection("records")
                     // .where(
                     //   'status',
-                    //   isNotEqualTo: 'pending',
+                    //   isNotEqualTo: 'DoctorPendingAppointment',
                     // )
                     .where(
                       'status',
-                      isEqualTo: "pending",
+                      isEqualTo: "DoctorPendingAppointment",
                     )
                     .where('id',
                         isEqualTo: FirebaseAuth.instance.currentUser!.uid)
@@ -105,7 +106,7 @@ class _PendingState extends State<Pending> {
                   }
                 })
             : const Center(
-                child: Text('No Appointment Pending'),
+                child: Text('No Appointment DoctorPendingAppointment'),
               ),
       ),
     );

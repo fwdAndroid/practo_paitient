@@ -1,19 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/basic.dart';
-import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:practo_paitient/bottompages/appointment.dart';
 
-class Pending extends StatefulWidget {
-  const Pending({super.key});
+class DoctorPastAppointment extends StatefulWidget {
+  const DoctorPastAppointment({Key? key}) : super(key: key);
 
   @override
-  State<Pending> createState() => _PendingState();
+  State<DoctorPastAppointment> createState() => _DoctorPastAppointmentState();
 }
 
-class _PendingState extends State<Pending> {
+class _DoctorPastAppointmentState extends State<DoctorPastAppointment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +20,7 @@ class _PendingState extends State<Pending> {
         child: FirebaseAuth.instance.currentUser != null
             ? StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection('hospital_appointment')
+                    .collection('doctor_appointment')
                     .doc("details")
                     .collection("records")
                     // .where(
@@ -30,7 +29,7 @@ class _PendingState extends State<Pending> {
                     // )
                     .where(
                       'status',
-                      isEqualTo: "pending",
+                      isEqualTo: "complete",
                     )
                     .where('id',
                         isEqualTo: FirebaseAuth.instance.currentUser!.uid)
@@ -60,8 +59,9 @@ class _PendingState extends State<Pending> {
                           child: ListView.builder(
                               itemCount: snapshot.data!.docs.length,
                               itemBuilder: (BuildContext context, int index) {
-                                final DocumentSnapshot documentSnapshot =
-                                    snapshot.data!.docs[index];
+                                Map<String, dynamic> snap =
+                                    snapshot.data!.docs[index].data()
+                                        as Map<String, dynamic>;
                                 return Column(
                                   children: [
                                     ListTile(
@@ -74,22 +74,9 @@ class _PendingState extends State<Pending> {
                                         //   ),
                                         // );
                                       },
-                                      title: Text(documentSnapshot['name']),
-                                      subtitle:
-                                          Text(documentSnapshot['problem']),
-                                      trailing: IconButton(
-                                          onPressed: () async {
-                                            await FirebaseFirestore.instance
-                                                .collection('appointments')
-                                                .doc("details")
-                                                .collection("records")
-                                                .doc(documentSnapshot.id)
-                                                .delete();
-                                          },
-                                          icon: Icon(
-                                            Icons.delete,
-                                            color: Colors.red,
-                                          )),
+                                      title: Text(snap['name']),
+                                      subtitle: Text(snap['problem']),
+                                      trailing: Text(snap['status']),
                                     ),
                                     Divider()
                                   ],

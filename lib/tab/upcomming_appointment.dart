@@ -20,7 +20,7 @@ class _UpComingState extends State<UpComing> {
         child: FirebaseAuth.instance.currentUser != null
             ? StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection('appointments')
+                    .collection('hospital_appointment')
                     .doc("details")
                     .collection("records")
                     // .where(
@@ -74,7 +74,6 @@ class _UpComingState extends State<UpComing> {
                                         //   ),
                                         // );
                                       },
-                                     
                                       subtitle: Text(snap['problem']),
                                       trailing: Text(snap['status']),
                                     ),

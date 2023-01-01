@@ -20,7 +20,7 @@ class _PastState extends State<Past> {
         child: FirebaseAuth.instance.currentUser != null
             ? StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection('appointments')
+                    .collection('hospital_appointment')
                     .doc("details")
                     .collection("records")
                     // .where(
