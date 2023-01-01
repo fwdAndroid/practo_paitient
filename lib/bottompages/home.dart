@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:practo_paitient/doctors/favourite_doctor.dart';
 import 'package:practo_paitient/doctors/specialist_doctor.dart';
 import 'package:practo_paitient/hospitals/hospitals_list.dart';
+import 'package:practo_paitient/notification/main_notification_page.dart';
 import 'package:practo_paitient/notification/notifications.dart';
 
 class Home_Screen extends StatefulWidget {
@@ -38,8 +39,10 @@ class _Home_ScreenState extends State<Home_Screen> {
           actions: [
             InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => Notifications()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (builder) => MainNotificationAppointment()));
               },
               child: Padding(
                 padding: const EdgeInsets.all(5.0),

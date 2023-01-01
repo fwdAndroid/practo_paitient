@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-class Notifications extends StatefulWidget {
-  const Notifications({Key? key}) : super(key: key);
+class DoctorNotifications extends StatefulWidget {
+  const DoctorNotifications({Key? key}) : super(key: key);
 
   @override
-  State<Notifications> createState() => _NotificationsState();
+  State<DoctorNotifications> createState() => _DoctorNotificationsState();
 }
 
-class _NotificationsState extends State<Notifications> {
+class _DoctorNotificationsState extends State<DoctorNotifications> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +30,7 @@ class _NotificationsState extends State<Notifications> {
             height: MediaQuery.of(context).size.height,
             child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection('hospital_appointment')
+                    .collection('doctor_appointment')
                     .doc("details")
                     .collection("records")
                     .where(
