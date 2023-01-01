@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:practo_paitient/doctors/favourite_doctor.dart';
 import 'package:practo_paitient/doctors/specialist_doctor.dart';
@@ -155,8 +157,8 @@ class _Home_ScreenState extends State<Home_Screen> {
                       ),
                     ),
                     InkWell(
-                      onTap: (){
-                         Navigator.push(
+                      onTap: () {
+                        Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (builder) => HospitalList()));
@@ -174,8 +176,8 @@ class _Home_ScreenState extends State<Home_Screen> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child:
-                                      Image.asset("asset/hospital-building.png"),
+                                  child: Image.asset(
+                                      "asset/hospital-building.png"),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -210,59 +212,73 @@ class _Home_ScreenState extends State<Home_Screen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Top Doctors",
+                      "Favourite Doctors",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 17,
                           fontWeight: FontWeight.w600),
                     ),
-                    TextButton(onPressed: () {}, child: Text("See All"))
                   ],
                 ),
               ),
               Container(
                 height: MediaQuery.of(context).size.height * 0.3,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Color(0xffD2D2D2)),
-                          width: 150,
-                          height: 182,
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  "asset/doctor.png",
-                                  fit: BoxFit.cover,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Text(
-                                    "Dr.Shang chi",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Text(
-                                    "Cardio Spacialist",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ]),
-                        ),
-                      );
+                child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection("doctorsprofile")
+                        .where('likes', isEqualTo: [
+                      FirebaseAuth.instance.currentUser!.uid
+                    ]).snapshots(),
+                    builder: (context,
+                        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                            snapshot) {
+                      return ListView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            Map<String, dynamic> snap =
+                                snapshot.data!.docs[index].data()
+                                    as Map<String, dynamic>;
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Color(0xffD2D2D2)),
+                                width: 150,
+                                height: 182,
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 70,
+                                        backgroundImage: NetworkImage(
+                                            snap['doctorPhotoURL']),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          snap['doctorName'],
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          snap['doctorSpecialization'],
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                    ]),
+                              ),
+                            );
+                          });
                     }),
               ),
             ],
