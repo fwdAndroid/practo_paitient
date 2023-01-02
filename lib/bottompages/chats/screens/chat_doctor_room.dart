@@ -1,600 +1,646 @@
+import 'dart:async';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:practo_paitient/bottompages/chats/screens/doctor_video_chat.dart';
 
-import 'package:practo_paitient/bottompages/chats/screens/hospitak_video_chat.dart';
-import 'package:practo_paitient/bottompages/chats/widgets/firebase_api.dart';
-import 'package:uuid/uuid.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:path/path.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:practo_paitient/models/message_model.dart';
+import 'package:practo_paitient/providers/chat_providers.dart';
+import 'package:practo_paitient/widgets/color_constants.dart';
+import 'package:practo_paitient/widgets/firebase_constants.dart';
+import 'package:practo_paitient/widgets/full_photo_page.dart';
+import 'package:practo_paitient/widgets/loading.dart';
+import 'package:provider/provider.dart';
+
+import '../widgets/widgets.dart';
 
 class DoctorChatRoom extends StatefulWidget {
-  String doctorId;
-  String doctorName;
-  String paitientname;
-  String paitientid;
-  DoctorChatRoom({
-    Key? key,
-    required this.paitientid,
-    required this.paitientname,
-    required this.doctorId,
-    required this.doctorName,
-  }) : super(key: key);
+  final String doctorName, doctorId, paitientName, paitientId;
+  DoctorChatRoom(
+      {Key? key,
+      required this.doctorName,
+      required this.doctorId,
+      required this.paitientId,
+      required this.paitientName})
+      : super(key: key);
 
   @override
-  State<DoctorChatRoom> createState() => _DoctorChatRoomState();
+  DoctorChatRoomState createState() => DoctorChatRoomState();
 }
 
-class _DoctorChatRoomState extends State<DoctorChatRoom> {
-  String groupChatId = "";
-  ScrollController scrollController = ScrollController();
-  final ImagePicker _picker = ImagePicker();
-  File? imageUrl;
-  PlatformFile? platformFile;
-  UploadTask? task;
-  File? file;
+class DoctorChatRoomState extends State<DoctorChatRoom> {
+  String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
-  TextEditingController messageController = TextEditingController();
-  String? imageLink, fileLink;
-  firebase_storage.UploadTask? uploadTask;
+  List<QueryDocumentSnapshot> listMessage = [];
+  int _limit = 20;
+  int _limitIncrement = 20;
+  String groupChatId = "";
+
+  File? imageFile;
+  bool isLoading = false;
+  bool isShowSticker = false;
+  String imageUrl = "";
+
+  final TextEditingController textEditingController = TextEditingController();
+  final ScrollController listScrollController = ScrollController();
+  final FocusNode focusNode = FocusNode();
+
+  late ChatProvider chatProvider;
 
   @override
   void initState() {
-    // TODO: implement initState
-    if (FirebaseAuth.instance.currentUser!.uid.hashCode <=
-        widget.doctorId.hashCode) {
-      groupChatId =
-          "${FirebaseAuth.instance.currentUser!.uid}-${widget.doctorId}";
-    } else {
-      groupChatId =
-          "${widget.doctorId}-${FirebaseAuth.instance.currentUser!.uid}";
-    }
-
     super.initState();
+    chatProvider = context.read<ChatProvider>();
+
+    focusNode.addListener(onFocusChange);
+    listScrollController.addListener(_scrollListener);
+    readLocal();
   }
 
-  String myStatus = "";
-  @override
-  Widget build(BuildContext context) {
-    final fileName = file != null ? basename(file!.path) : 'No File Selected';
-
-    return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.black),
-          elevation: 0,
-          backgroundColor: Colors.white,
-          title: Column(
-            children: [
-              Text(
-                widget.doctorName,
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black),
-              ),
-              SizedBox(
-                height: 6,
-              ),
-              Text(
-                widget.paitientname,
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(onPressed: () {}, child: Text("Download Media")),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (builder) => DoctorVideoCall(
-                                callingId: widget.doctorId,
-                                paitientname: widget.paitientname,
-                              )));
-                },
-                icon: Icon(
-                  Icons.video_call,
-                  color: Colors.blue,
-                ))
-          ],
-        ),
-        body: Container(
-          child: Stack(
-            children: <Widget>[
-              StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection("messages")
-                      .doc(groupChatId)
-                      .collection(groupChatId)
-                      .orderBy("timestamp", descending: false)
-                      .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasData) {
-                      return snapshot.data!.docs == 0
-                          ? Center(child: Text("Empty "))
-                          : SingleChildScrollView(
-                              child: ListView.builder(
-                                controller: scrollController,
-                                itemCount: snapshot.data!.docs.length,
-                                shrinkWrap: true,
-                                padding: EdgeInsets.only(top: 10, bottom: 10),
-                                physics: NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  var ds = snapshot.data!.docs[index];
-                                  return ds.get("type") == 0
-                                      ? Container(
-                                          padding: EdgeInsets.only(
-                                              left: 14,
-                                              right: 14,
-                                              top: 10,
-                                              bottom: 10),
-                                          child: Align(
-                                            alignment: (ds.get("senderId") ==
-                                                    FirebaseAuth.instance
-                                                        .currentUser!.uid
-                                                ? Alignment.bottomRight
-                                                : Alignment.bottomLeft),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                color: (ds.get("senderId") ==
-                                                        FirebaseAuth.instance
-                                                            .currentUser!.uid
-                                                    ? Colors.grey.shade200
-                                                    : Colors.blue[200]),
-                                              ),
-                                              padding: EdgeInsets.all(16),
-                                              child: Text(
-                                                ds.get("content"),
-                                                style: TextStyle(fontSize: 15),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : ds.get("type") == 1
-                                          ? Stack(
-                                              children: [
-                                                Column(children: [
-                                                  Container(
-                                                    padding: EdgeInsets.only(
-                                                        left: 14,
-                                                        right: 14,
-                                                        top: 10,
-                                                        bottom: 10),
-                                                    child: Align(
-                                                      alignment: (ds.get(
-                                                                  "senderId") ==
-                                                              FirebaseAuth
-                                                                  .instance
-                                                                  .currentUser!
-                                                                  .uid
-                                                          ? Alignment
-                                                              .bottomRight
-                                                          : Alignment
-                                                              .bottomLeft),
-                                                      child: Container(
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height *
-                                                            0.2,
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            0.4,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(20),
-                                                          image: DecorationImage(
-                                                              image: NetworkImage(
-                                                                ds.get("image"),
-                                                              ),
-                                                              fit: BoxFit.fill),
-                                                          // color: (ds.get("senderId") == FirebaseAuth.instance.currentUser!.uid?Colors.grey.shade200:Colors.blue[200]),
-                                                        ),
-                                                        // padding: EdgeInsets.all(16),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  task != null
-                                                      ? buildUploadStatus(task!)
-                                                      : Container(),
-                                                ]),
-                                                Positioned(
-                                                  top: 12,
-                                                  right: 17,
-                                                  child: Align(
-                                                    alignment: Alignment.center,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        print("s");
-                                                      },
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                                color: Colors
-                                                                    .grey),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(4.0),
-                                                          child: Icon(
-                                                            Icons.download,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          : ds.get("type") == 2
-                                              ? Stack(
-                                                  children: [
-                                                    Container(
-                                                      padding: EdgeInsets.only(
-                                                          left: 14,
-                                                          right: 14,
-                                                          top: 10,
-                                                          bottom: 10),
-                                                      child: Align(
-                                                        alignment: (ds.get(
-                                                                    "senderId") ==
-                                                                FirebaseAuth
-                                                                    .instance
-                                                                    .currentUser!
-                                                                    .uid
-                                                            ? Alignment
-                                                                .bottomRight
-                                                            : Alignment
-                                                                .bottomLeft),
-                                                        child: Container(
-                                                          height: 60,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20),
-                                                            color: (ds.get(
-                                                                        "senderId") ==
-                                                                    FirebaseAuth
-                                                                        .instance
-                                                                        .currentUser!
-                                                                        .uid
-                                                                ? Colors.grey
-                                                                    .shade200
-                                                                : Colors
-                                                                    .blue[200]),
-                                                          ),
-                                                          child: Center(
-                                                            child: Text(
-                                                              ds
-                                                                  .get("file")
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  fontSize: 16,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    task != null
-                                                        ? buildUploadStatus(
-                                                            task!)
-                                                        : Container(),
-                                                    Positioned(
-                                                      top: 12,
-                                                      right: 17,
-                                                      child: Align(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            print("object");
-                                                          },
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                                    shape: BoxShape
-                                                                        .circle,
-                                                                    color: Colors
-                                                                        .grey),
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(4.0),
-                                                              child: Icon(
-                                                                Icons.download,
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                              : Container();
-                                },
-                              ),
-                            );
-                    } else if (snapshot.hasError) {
-                      return Center(child: Icon(Icons.error_outline));
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  }),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Container(
-                  padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                  height: 60,
-                  width: double.infinity,
-                  color: Colors.white,
-                  child: Row(
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Container(
-                                height: 100,
-                                child: AlertDialog(
-                                  title: new Text("Welcome Practo"),
-                                  content: Container(
-                                    height: 100,
-                                    child: Column(
-                                      children: [
-                                        new TextButton(
-                                            onPressed: addImage,
-                                            child: Text("Upload Image")),
-                                        new TextButton(
-                                            onPressed: uploadFile,
-                                            child: Text("Upload File")),
-                                      ],
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    new ElevatedButton(
-                                      child: new Text("OK"),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                            color: Colors.lightBlue,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: messageController,
-                          decoration: InputDecoration(
-                              hintText: "Write message...",
-                              hintStyle: TextStyle(color: Colors.black54),
-                              border: InputBorder.none),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      FloatingActionButton(
-                        onPressed: () {
-                          sendMessage(messageController.text.trim(), 0);
-                        },
-                        child: Icon(
-                          Icons.send,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                        backgroundColor: Colors.blue,
-                        elevation: 0,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ));
-  }
-  //Functions
-
-  void sendMessage(String content, int type) {
-    // type: 0 = text, 1 = image, 2 = sticker
-    if (content.trim() != '') {
-      messageController.clear();
-
-      var documentReference = FirebaseFirestore.instance
-          .collection('messages')
-          .doc(groupChatId)
-          .collection(groupChatId)
-          .doc(DateTime.now().millisecondsSinceEpoch.toString());
-
-      FirebaseFirestore.instance.runTransaction((transaction) async {
-        await transaction.set(
-          documentReference,
-          {
-            "senderId": FirebaseAuth.instance.currentUser!.uid,
-            "receiverId": widget.doctorId,
-            "time": DateTime.now(),
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-            'content': content,
-            'type': type
-          },
-        );
+  _scrollListener() {
+    if (!listScrollController.hasClients) return;
+    if (listScrollController.offset >=
+            listScrollController.position.maxScrollExtent &&
+        !listScrollController.position.outOfRange &&
+        _limit <= listMessage.length) {
+      setState(() {
+        _limit += _limitIncrement;
       });
-      scrollController.animateTo(0.0,
-          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-    } else {
-      // Fluttertoast.showToast(msg: 'Nothing to send');
     }
+  }
+
+  void onFocusChange() {
+    if (focusNode.hasFocus) {
+      // Hide sticker when keyboard appear
+      setState(() {
+        isShowSticker = false;
+      });
+    }
+  }
+
+  void readLocal() {
+    String peerId = widget.paitientId;
+    if (currentUserId.compareTo(peerId) > 0) {
+      groupChatId = '$currentUserId-$peerId';
+    } else {
+      groupChatId = '$peerId-$currentUserId';
+    }
+
+    chatProvider.updateDataFirestore(
+      FirestoreConstants.pathUserCollection,
+      currentUserId,
+      {FirestoreConstants.chattingWith: peerId},
+    );
+  }
+
+  Future getImage() async {
+    ImagePicker imagePicker = ImagePicker();
+    PickedFile? pickedFile;
+
+    pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      imageFile = File(pickedFile.path);
+      if (imageFile != null) {
+        setState(() {
+          isLoading = true;
+        });
+        uploadFile();
+      }
+    }
+  }
+
+  void getSticker() {
+    // Hide keyboard when sticker appear
+    focusNode.unfocus();
+    setState(() {
+      isShowSticker = !isShowSticker;
+    });
   }
 
   Future uploadFile() async {
-    print("clicked");
-    final result = await FilePicker.platform.pickFiles(allowMultiple: false);
-
-    if (result == null) return;
-    final path = result.files.single.path!;
-
-    setState(() => file = File(path));
-    if (file == null) return;
-
-    var uuid = Uuid();
-
-    final fileName = basename(file!.path);
-    final destination = 'files/$fileName+${uuid.v4()}}';
-
-    task = FirebaseApi.uploadFile(destination, file!);
-    setState(() {
-      fileLink = fileName;
-    });
-
-    if (task == null) return;
-
-    final snapshot = await task!.whenComplete(() {});
-    final urlDownload = await snapshot.ref.getDownloadURL();
-
-    print('Download-Link: $urlDownload');
-    var documentReference = FirebaseFirestore.instance
-        .collection('messages')
-        .doc(groupChatId)
-        .collection(groupChatId)
-        .doc(DateTime.now().millisecondsSinceEpoch.toString());
-    FirebaseFirestore.instance.runTransaction((transaction) async {
-      await transaction.set(
-        documentReference,
-        {
-          "senderId": FirebaseAuth.instance.currentUser!.uid,
-          "reciverId": widget.doctorId,
-          // "content": messageController.text,
-          "time": DateTime.now(),
-          'image': "",
-          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-          // 'content': content,
-          "file": fileLink,
-          'type': 2,
-        },
-      );
-    });
-  }
-
-  Widget buildUploadStatus(UploadTask task) => StreamBuilder<TaskSnapshot>(
-        stream: task.snapshotEvents,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final snap = snapshot.data!;
-            final progress = snap.bytesTransferred / snap.totalBytes;
-            final percentage = (progress * 100).toStringAsFixed(2);
-
-            return Text(
-              '$percentage %',
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontSize: 8,
-                fontWeight: FontWeight.w500,
-              ),
-            );
-          } else {
-            return Container();
-          }
-        },
-      );
-
-  Future uploadImageToFirebase() async {
-    File? fileName = imageUrl;
-    var uuid = Uuid();
-    firebase_storage.Reference firebaseStorageRef = firebase_storage
-        .FirebaseStorage.instance
-        .ref()
-        .child('messages/images+${uuid.v4()}');
-    firebase_storage.UploadTask uploadTask =
-        firebaseStorageRef.putFile(fileName!);
-    firebase_storage.TaskSnapshot taskSnapshot =
-        await uploadTask.whenComplete(() async {
-      print(fileName);
-      String img = await uploadTask.snapshot.ref.getDownloadURL();
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    UploadTask uploadTask = chatProvider.uploadFile(imageFile!, fileName);
+    try {
+      TaskSnapshot snapshot = await uploadTask;
+      imageUrl = await snapshot.ref.getDownloadURL();
       setState(() {
-        imageLink = img;
+        isLoading = false;
+        onSendMessage(imageUrl, TypeMessage.image);
       });
-    });
+    } on FirebaseException catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      Fluttertoast.showToast(msg: e.message ?? e.toString());
+    }
   }
 
-  void addImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      imageUrl = File(image!.path);
-    });
-    await uploadImageToFirebase().then((value) {
-      var documentReference = FirebaseFirestore.instance
-          .collection('messages')
-          .doc(groupChatId)
-          .collection(groupChatId)
-          .doc(DateTime.now().millisecondsSinceEpoch.toString());
-      FirebaseFirestore.instance.runTransaction((transaction) async {
-        await transaction.set(
-          documentReference,
-          {
-            "senderId": FirebaseAuth.instance.currentUser!.uid,
-            "reciverId": widget.doctorId,
-            // "content": messageController.text,
-            "time": DateTime.now(),
-            'image': imageLink,
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-            // 'content': content,
-            "file": "",
-            'type': 1,
-          },
-        );
-      });
-    }).then((value) {
-      // FocusScope.of(context).unfocus();
-      messageController.clear();
-    });
+  void onSendMessage(String content, int type) {
+    if (content.trim().isNotEmpty) {
+      textEditingController.clear();
+      chatProvider.sendMessage(
+          content, type, groupChatId, currentUserId, widget.paitientId);
+      if (listScrollController.hasClients) {
+        listScrollController.animateTo(0,
+            duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+      }
+    } else {
+      Fluttertoast.showToast(
+          msg: 'Nothing to send', backgroundColor: ColorConstants.greyColor);
+    }
   }
+
+  Widget buildItem(int index, DocumentSnapshot? document) {
+    if (document != null) {
+      MessageChat messageChat = MessageChat.fromDocument(document);
+      if (messageChat.idFrom == currentUserId) {
+        // Right (my message)
+        return Row(
+          children: <Widget>[
+            messageChat.type == TypeMessage.text
+                // Text
+                ? Container(
+                    child: Text(
+                      messageChat.content,
+                      style: TextStyle(color: ColorConstants.primaryColor),
+                    ),
+                    padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                    width: 200,
+                    decoration: BoxDecoration(
+                        color: ColorConstants.greyColor2,
+                        borderRadius: BorderRadius.circular(8)),
+                    margin: EdgeInsets.only(
+                        bottom: isLastMessageRight(index) ? 20 : 10, right: 10),
+                  )
+                : messageChat.type == TypeMessage.image
+                    // Image
+                    ? Container(
+                        child: OutlinedButton(
+                          child: Material(
+                            child: Image.network(
+                              messageChat.content,
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: ColorConstants.greyColor2,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8),
+                                    ),
+                                  ),
+                                  width: 200,
+                                  height: 200,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: ColorConstants.themeColor,
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                    ),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, object, stackTrace) {
+                                return Material(
+                                  child: Image.asset(
+                                    'images/img_not_available.jpeg',
+                                    width: 200,
+                                    height: 200,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8),
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                );
+                              },
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            clipBehavior: Clip.hardEdge,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FullPhotoPage(
+                                  url: messageChat.content,
+                                ),
+                              ),
+                            );
+                          },
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all<EdgeInsets>(
+                                  EdgeInsets.all(0))),
+                        ),
+                        margin: EdgeInsets.only(
+                            bottom: isLastMessageRight(index) ? 20 : 10,
+                            right: 10),
+                      )
+                    // Sticker
+                    : Container(
+                        child: Image.asset(
+                          'images/${messageChat.content}.gif',
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                        margin: EdgeInsets.only(
+                            bottom: isLastMessageRight(index) ? 20 : 10,
+                            right: 10),
+                      ),
+          ],
+          mainAxisAlignment: MainAxisAlignment.end,
+        );
+      } else {
+        // Left (peer message)
+        return Container(
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  isLastMessageLeft(index)
+                      ? Material(
+                          child: Image.network(
+                            "widget.arguments.peerAvatar",
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: ColorConstants.themeColor,
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, object, stackTrace) {
+                              return Icon(
+                                Icons.account_circle,
+                                size: 35,
+                                color: ColorConstants.greyColor,
+                              );
+                            },
+                            width: 35,
+                            height: 35,
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(18),
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                        )
+                      : Container(width: 35),
+                  messageChat.type == TypeMessage.text
+                      ? Container(
+                          child: Text(
+                            messageChat.content,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                          width: 200,
+                          decoration: BoxDecoration(
+                              color: ColorConstants.primaryColor,
+                              borderRadius: BorderRadius.circular(8)),
+                          margin: EdgeInsets.only(left: 10),
+                        )
+                      : messageChat.type == TypeMessage.image
+                          ? Container(
+                              child: TextButton(
+                                child: Material(
+                                  child: Image.network(
+                                    messageChat.content,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          color: ColorConstants.greyColor2,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(8),
+                                          ),
+                                        ),
+                                        width: 200,
+                                        height: 200,
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            color: ColorConstants.themeColor,
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                                : null,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    errorBuilder:
+                                        (context, object, stackTrace) =>
+                                            Material(
+                                      child: Image.asset(
+                                        'images/img_not_available.jpeg',
+                                        width: 200,
+                                        height: 200,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8),
+                                      ),
+                                      clipBehavior: Clip.hardEdge,
+                                    ),
+                                    width: 200,
+                                    height: 200,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                  clipBehavior: Clip.hardEdge,
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FullPhotoPage(
+                                          url: messageChat.content),
+                                    ),
+                                  );
+                                },
+                                style: ButtonStyle(
+                                    padding:
+                                        MaterialStateProperty.all<EdgeInsets>(
+                                            EdgeInsets.all(0))),
+                              ),
+                              margin: EdgeInsets.only(left: 10),
+                            )
+                          : Container(
+                              child: Image.asset(
+                                'images/${messageChat.content}.gif',
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                              margin: EdgeInsets.only(
+                                  bottom: isLastMessageRight(index) ? 20 : 10,
+                                  right: 10),
+                            ),
+                ],
+              ),
+
+              // Time
+              isLastMessageLeft(index)
+                  ? Container(
+                      child: Text(
+                        DateFormat('dd MMM kk:mm').format(
+                            DateTime.fromMillisecondsSinceEpoch(
+                                int.parse(messageChat.timestamp))),
+                        style: TextStyle(
+                            color: ColorConstants.greyColor,
+                            fontSize: 12,
+                            fontStyle: FontStyle.italic),
+                      ),
+                      margin: EdgeInsets.only(left: 50, top: 5, bottom: 5),
+                    )
+                  : SizedBox.shrink()
+            ],
+            crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+          margin: EdgeInsets.only(bottom: 10),
+        );
+      }
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
+  bool isLastMessageLeft(int index) {
+    if ((index > 0 &&
+            listMessage[index - 1].get(FirestoreConstants.idFrom) ==
+                currentUserId) ||
+        index == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool isLastMessageRight(int index) {
+    if ((index > 0 &&
+            listMessage[index - 1].get(FirestoreConstants.idFrom) !=
+                currentUserId) ||
+        index == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> onBackPress() {
+    if (isShowSticker) {
+      setState(() {
+        isShowSticker = false;
+      });
+    } else {
+      chatProvider.updateDataFirestore(
+        FirestoreConstants.pathUserCollection,
+        currentUserId,
+        {FirestoreConstants.chattingWith: null},
+      );
+      Navigator.pop(context);
+    }
+
+    return Future.value(false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Column(
+          children: [
+            Text(
+              widget.doctorName,
+              style: TextStyle(color: ColorConstants.primaryColor),
+            ),
+            Text(
+              widget.paitientName,
+              style: TextStyle(color: ColorConstants.primaryColor),
+            ),
+          ],
+        ),
+        centerTitle: true,
+      ),
+      body: SafeArea(
+        child: WillPopScope(
+          child: Stack(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  // List of messages
+                  buildListMessage(),
+
+                  // Sticker
+                  // isShowSticker ? buildSticker() : SizedBox.shrink(),
+
+                  // Input content
+                  buildInput(),
+                ],
+              ),
+
+              // Loading
+              buildLoading()
+            ],
+          ),
+          onWillPop: onBackPress,
+        ),
+      ),
+    );
+  }
+
+  Widget buildLoading() {
+    return Positioned(
+      child: isLoading ? LoadingView() : SizedBox.shrink(),
+    );
+  }
+
+  Widget buildInput() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          // Button send image
+          Material(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 1),
+              child: IconButton(
+                icon: Icon(Icons.image),
+                onPressed: getImage,
+                color: ColorConstants.primaryColor,
+              ),
+            ),
+            color: Colors.white,
+          ),
+          Material(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 1),
+              child: IconButton(
+                icon: Icon(Icons.face),
+                onPressed: getSticker,
+                color: ColorConstants.primaryColor,
+              ),
+            ),
+            color: Colors.white,
+          ),
+
+          // Edit text
+          Flexible(
+            child: Container(
+              child: TextField(
+                onSubmitted: (value) {
+                  onSendMessage(textEditingController.text, TypeMessage.text);
+                },
+                style:
+                    TextStyle(color: ColorConstants.primaryColor, fontSize: 15),
+                controller: textEditingController,
+                decoration: InputDecoration.collapsed(
+                  hintText: 'Type your message...',
+                  hintStyle: TextStyle(color: ColorConstants.greyColor),
+                ),
+                focusNode: focusNode,
+                autofocus: true,
+              ),
+            ),
+          ),
+
+          // Button send message
+          Material(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 8),
+              child: IconButton(
+                icon: Icon(Icons.send),
+                onPressed: () =>
+                    onSendMessage(textEditingController.text, TypeMessage.text),
+                color: ColorConstants.primaryColor,
+              ),
+            ),
+            color: Colors.white,
+          ),
+        ],
+      ),
+      width: double.infinity,
+      height: 50,
+      decoration: BoxDecoration(
+          border: Border(
+              top: BorderSide(color: ColorConstants.greyColor2, width: 0.5)),
+          color: Colors.white),
+    );
+  }
+
+  Widget buildListMessage() {
+    return Flexible(
+      child: groupChatId.isNotEmpty
+          ? StreamBuilder<QuerySnapshot>(
+              stream: chatProvider.getChatStream(groupChatId, _limit),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasData) {
+                  listMessage = snapshot.data!.docs;
+                  if (listMessage.length > 0) {
+                    return ListView.builder(
+                      padding: EdgeInsets.all(10),
+                      itemBuilder: (context, index) =>
+                          buildItem(index, snapshot.data?.docs[index]),
+                      itemCount: snapshot.data?.docs.length,
+                      reverse: true,
+                      controller: listScrollController,
+                    );
+                  } else {
+                    return Center(child: Text("No message here yet..."));
+                  }
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: ColorConstants.themeColor,
+                    ),
+                  );
+                }
+              },
+            )
+          : Center(
+              child: CircularProgressIndicator(
+                color: ColorConstants.themeColor,
+              ),
+            ),
+    );
+  }
+}
+
+class DoctorChatRoomArguments {
+  final String peerId;
+  final String peerAvatar;
+  final String peerNickname;
+
+  DoctorChatRoomArguments(
+      {required this.peerId,
+      required this.peerAvatar,
+      required this.peerNickname});
 }

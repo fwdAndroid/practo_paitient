@@ -45,7 +45,7 @@ class _AllDoctorChatState extends State<AllDoctorChat> {
                       .collection("records")
                       .where("id",
                           isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                      .where("doctorid", isEqualTo: widget.doctorid)
+                      .where("status", isEqualTo: "start")
                       // .where("hospitalid",
                       //     isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
 
@@ -70,16 +70,28 @@ class _AllDoctorChatState extends State<AllDoctorChat> {
                                 snapshot.data!.docs[index];
                             return InkWell(
                               onTap: () {
-                                Navigator.push(context,
-                                    CupertinoPageRoute(builder: (context) {
-                                  return DoctorChatRoom(
-                                    doctorName: documentSnapshot['doctorName'],
-                                    paitientid: documentSnapshot['id'],
-                                    doctorId: documentSnapshot['doctorid'],
-                                    paitientname: documentSnapshot['name'],
-                                    // user : widget.doctorid,
-                                  );
-                                }));
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DoctorChatRoom(
+                                      doctorName:
+                                          documentSnapshot['doctorName'],
+                                      paitientId: documentSnapshot['id'],
+                                      doctorId: documentSnapshot['doctorid'],
+                                      paitientName: documentSnapshot['name'],
+                                    ),
+                                  ),
+                                );
+                                // Navigator.push(context,
+                                //     CupertinoPageRoute(builder: (context) {
+                                //   return DoctorChatRoom(
+                                //     doctorName: documentSnapshot['doctorName'],
+                                //     paitientId: documentSnapshot['id'],
+                                //     doctorId: documentSnapshot['doctorid'],
+                                //     paitientName: documentSnapshot['name'],
+                                //     // user : widget.doctorid,
+                                //   );
+                                // }));
                               },
                               child: Padding(
                                   padding: const EdgeInsets.all(8.0),
