@@ -31,7 +31,7 @@ class _DoctorPendingAppointmentState extends State<DoctorPendingAppointment> {
                     // )
                     .where(
                       'status',
-                      isEqualTo: "DoctorPendingAppointment",
+                      isEqualTo: "pending",
                     )
                     .where('id',
                         isEqualTo: FirebaseAuth.instance.currentUser!.uid)
@@ -81,7 +81,8 @@ class _DoctorPendingAppointmentState extends State<DoctorPendingAppointment> {
                                       trailing: IconButton(
                                           onPressed: () async {
                                             await FirebaseFirestore.instance
-                                                .collection('appointments')
+                                                .collection(
+                                                    'doctor_appointment')
                                                 .doc("details")
                                                 .collection("records")
                                                 .doc(documentSnapshot.id)

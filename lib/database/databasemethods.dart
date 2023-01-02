@@ -168,9 +168,10 @@ class DatabaseMethods {
       String? age,
       String? problem,
       required String gender,
-      String? date,
-      String? time,
+      required String date,
+      required String time,
       String? uid,
+      required String uuid,
       required String doctorid}) async {
     String res = 'Some error occured';
     var dooc = Uuid().v1();

@@ -80,7 +80,8 @@ class _PendingState extends State<Pending> {
                                       trailing: IconButton(
                                           onPressed: () async {
                                             await FirebaseFirestore.instance
-                                                .collection('appointments')
+                                                .collection(
+                                                    'hospital_appointment')
                                                 .doc("details")
                                                 .collection("records")
                                                 .doc(documentSnapshot.id)

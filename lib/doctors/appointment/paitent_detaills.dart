@@ -1,22 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:practo_paitient/bottom.dart';
 import 'package:practo_paitient/database/databasemethods.dart';
-import 'package:practo_paitient/doctors/appointment/medical_records.dart';
-import 'package:practo_paitient/doctors/appointment/time_selection.dart';
-import 'package:practo_paitient/payment/payment.dart';
 import 'package:practo_paitient/widgets/utils.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:uuid/uuid.dart';
 
 class PaitnetsDetails extends StatefulWidget {
   final id;
   final doctorName;
-  PaitnetsDetails({Key? key, required this.id, required this.doctorName})
-      : super(key: key);
+  PaitnetsDetails({
+    Key? key,
+    required this.id,
+    required this.doctorName,
+  }) : super(key: key);
 
   @override
   State<PaitnetsDetails> createState() => _PaitnetsDetailsState();
@@ -26,8 +28,6 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
   TextEditingController age = TextEditingController();
   TextEditingController problem = TextEditingController();
   TextEditingController timeinput = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  TextEditingController timeController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController genderController = TextEditingController();
@@ -36,6 +36,8 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
   SpeechToText _speechToText = SpeechToText();
   bool _speechEnabled = false;
   String _lastWords = '';
+  String days = "";
+  String times = "";
   @override
   void initState() {
     super.initState();
@@ -223,6 +225,49 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                   SizedBox(
                     height: 10,
                   ),
+                  Container(
+                    margin: EdgeInsets.only(left: 30, right: 30),
+                    child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('doctorTime')
+                            .doc("doctorname")
+                            .collection(widget.id)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData)
+                            return Center(
+                              child: CupertinoActivityIndicator(),
+                            );
+
+                          return Container(
+                            child: DropdownSearch<String>(
+                              dropdownDecoratorProps: DropDownDecoratorProps(
+                                dropdownSearchDecoration: InputDecoration(
+                                  labelText: "Select Time",
+                                  hintText: "Select Time",
+                                ),
+                              ),
+                              popupProps: PopupProps.menu(
+                                showSelectedItems: true,
+                                disabledItemFn: (String s) => s.startsWith('I'),
+                              ),
+                              items: snapshot.data!.docs
+                                  .map((DocumentSnapshot document) {
+                                    Map<String, dynamic> data = document.data()!
+                                        as Map<String, dynamic>;
+                                    return data["time"];
+                                  })
+                                  .toList()
+                                  .cast<String>(),
+                              onChanged: (String? time) {
+                                setState(() {
+                                  times = time!;
+                                });
+                              },
+                            ),
+                          );
+                        }),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Center(
@@ -242,20 +287,69 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 30, right: 30),
+                    child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('doctorTime')
+                            .doc("doctorname")
+                            .collection(widget.id)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData)
+                            return Center(
+                              child: CupertinoActivityIndicator(),
+                            );
+
+                          return Container(
+                            child: DropdownSearch<String>(
+                              dropdownDecoratorProps: DropDownDecoratorProps(
+                                dropdownSearchDecoration: InputDecoration(
+                                  labelText: "Select Day",
+                                  hintText: "Select Day",
+                                ),
+                              ),
+                              popupProps: PopupProps.menu(
+                                showSelectedItems: true,
+                                disabledItemFn: (String s) => s.startsWith('I'),
+                              ),
+                              items: snapshot.data!.docs
+                                  .map((DocumentSnapshot document) {
+                                    Map<String, dynamic> data = document.data()!
+                                        as Map<String, dynamic>;
+                                    return data["day"];
+                                  })
+                                  .toList()
+                                  .cast<String>(),
+                              selectedItem: "day",
+                              onChanged: (String? day) {
+                                setState(() {
+                                  days = day!;
+                                });
+                              },
+                            ),
+                          );
+                        }),
+                  ),
                 ]);
           }),
     );
   }
 
   void doctormakeAppointment() async {
+    var uuid = Uuid().v4();
     setState(() {
       _isLoading = true;
     });
     String res = await DatabaseMethods().doctormakeAppointment(
-      time: timeController.text,
-      date: dateController.text,
+      time: times,
+      date: days,
       problem: problem.text,
       doctorid: widget.id,
+      uuid: uuid,
       age: age.text,
       name: nameController.text,
       gender: genderController.text,
@@ -275,9 +369,7 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (builder) => TimeSelction(
-            id: widget.id,
-          ),
+          builder: (builder) => MobileScreenLayout(),
         ),
       );
     } else {
