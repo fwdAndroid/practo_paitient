@@ -170,6 +170,7 @@ class DatabaseMethods {
       required String gender,
       required String date,
       required String time,
+      required String doctorName,
       String? uid,
       required String uuid,
       required String doctorid}) async {
@@ -186,6 +187,7 @@ class DatabaseMethods {
           age: age.toString(),
           problem: problem.toString(),
           date: date.toString(),
+          doctorName: doctorName.toString(),
           time: time.toString(),
           gender: gender);
 

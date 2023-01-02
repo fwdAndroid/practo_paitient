@@ -6,8 +6,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:practo_paitient/bottompages/chats/screens/doctor_video_chat.dart';
-import 'package:practo_paitient/widgets/firebase_api.dart';
+
 import 'package:practo_paitient/bottompages/chats/screens/hospitak_video_chat.dart';
+import 'package:practo_paitient/bottompages/chats/widgets/firebase_api.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
@@ -89,6 +90,7 @@ class _DoctorChatRoomState extends State<DoctorChatRoom> {
             ],
           ),
           actions: [
+            TextButton(onPressed: () {}, child: Text("Download Media")),
             IconButton(
                 onPressed: () {
                   Navigator.push(

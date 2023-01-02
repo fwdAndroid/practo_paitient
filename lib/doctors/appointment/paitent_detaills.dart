@@ -346,6 +346,7 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
     });
     String res = await DatabaseMethods().doctormakeAppointment(
       time: times,
+      doctorName: widget.doctorName,
       date: days,
       problem: problem.text,
       doctorid: widget.id,

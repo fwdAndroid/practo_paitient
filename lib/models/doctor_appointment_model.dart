@@ -13,6 +13,7 @@ class DoctorModel {
   final String gender;
   String uuid;
   final String? time;
+  final String doctorName;
 
   DoctorModel({
     required this.status,
@@ -24,6 +25,7 @@ class DoctorModel {
     required this.date,
     required this.time,
     required this.doctorid,
+    required this.doctorName,
     required this.gender,
   });
 
@@ -31,6 +33,7 @@ class DoctorModel {
   Map<String, dynamic> toJson() => {
         'status': status,
         'id': id,
+        'doctorName': doctorName,
         'uuid': uuid,
         'problem': problem,
         'name': name,
@@ -46,6 +49,7 @@ class DoctorModel {
 
     return DoctorModel(
         status: snapshot['status'] ?? '',
+        doctorName: snapshot['doctorName'] ?? '',
         id: snapshot['id'] ?? '',
         problem: snapshot['problem'] ?? '',
         name: snapshot['name'] ?? '',
