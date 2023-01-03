@@ -1,22 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:practo_paitient/bottompages/chat_appointments/doctor_past_room.dart';
+import 'package:practo_paitient/bottompages/chats/app_theme.dart';
 import 'package:practo_paitient/bottompages/chats/screens/chat_doctor_room.dart';
 import 'package:uuid/uuid.dart';
 
-import '../screens/chat_hospital_room.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../app_theme.dart';
-
-class AllDoctorChat extends StatefulWidget {
+class PastDoctor extends StatefulWidget {
   final doctorid;
-  AllDoctorChat({required this.doctorid});
+  PastDoctor({required this.doctorid});
   @override
-  State<AllDoctorChat> createState() => _AllDoctorChatState();
+  State<PastDoctor> createState() => _PastDoctorState();
 }
 
-class _AllDoctorChatState extends State<AllDoctorChat> {
+class _PastDoctorState extends State<PastDoctor> {
   @override
   Widget build(BuildContext context) {
     var uuid = Uuid().v1();
@@ -35,7 +34,7 @@ class _AllDoctorChatState extends State<AllDoctorChat> {
                       .collection("records")
                       .where("id",
                           isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                      .where("status", isEqualTo: "start")
+                      .where("status", isEqualTo: "complete")
                       // .where("hospitalid",
                       //     isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
 
@@ -63,7 +62,7 @@ class _AllDoctorChatState extends State<AllDoctorChat> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => DoctorChatRoom(
+                                    builder: (context) => DoctorPastRoom(
                                       doctorName:
                                           documentSnapshot['doctorName'],
                                       paitientid: documentSnapshot['id'],

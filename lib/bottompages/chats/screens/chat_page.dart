@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:practo_paitient/bottompages/chat_appointments/doctor_chat_appointments.dart';
 import 'package:practo_paitient/bottompages/chats/widgets/all_doctor_chat.dart';
 
 import '../widgets/widgets.dart';
@@ -74,41 +75,25 @@ class _ChatPageState extends State<ChatPage> {
             ),
 
             // ignore: prefer_const_constructors
-            StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("doctor_appointment")
-                    .doc("details")
-                    .collection("records")
-                    .snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  return Container(
-                    height: MediaQuery.of(context).size.height / 15,
-                    margin: EdgeInsets.only(left: 20, right: 20),
-                    child: ListView.builder(itemBuilder: (context, index) {
-                      final DocumentSnapshot documentSnapshot =
-                          snapshot.data!.docs[index];
-                      return Card(
-                        elevation: 5,
-                        child: ListTile(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (builder) => AllDoctorChat(
-                                          doctorid:
-                                              documentSnapshot['doctorid'],
-                                        )));
-                          },
-                          // ignore: prefer_const_constructors
-                          leading: CircleAvatar(
-                            backgroundImage: AssetImage("asset/teeth.png"),
-                          ),
-                          title: Text("Chat With Doctors"),
-                        ),
-                      );
-                    }),
-                  );
-                }),
+            Container(
+                height: MediaQuery.of(context).size.height / 15,
+                margin: EdgeInsets.only(left: 20, right: 20),
+                child: Card(
+                  elevation: 5,
+                  child: ListTile(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (builder) => DoctorChatAppointment()));
+                    },
+                    // ignore: prefer_const_constructors
+                    leading: CircleAvatar(
+                      backgroundImage: AssetImage("asset/teeth.png"),
+                    ),
+                    title: Text("Chat With Doctors"),
+                  ),
+                )),
             // AllChats(
             //   doctorid: widget.doctorid,
             //   name: widget.name,
