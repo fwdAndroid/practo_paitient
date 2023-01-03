@@ -1,6 +1,11 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:practo_paitient/widgets/color_constants.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
 
 class FullPhotoPage extends StatelessWidget {
   final String url;
@@ -9,11 +14,22 @@ class FullPhotoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Reference file;
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () async {
+                //         await downloadFile(file, context);
+              },
+              icon: Icon(
+                Icons.download,
+                color: Colors.white,
+              ))
+        ],
         title: Text(
           "Full Photo",
-          style: TextStyle(color: ColorConstants.primaryColor),
+          style: TextStyle(color: Colors.blue),
         ),
         centerTitle: true,
       ),
@@ -23,5 +39,13 @@ class FullPhotoPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  downloadFile(Reference reference, BuildContext context) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/${reference.name}');
+    await reference.writeToFile(file);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("download Complete")));
   }
 }

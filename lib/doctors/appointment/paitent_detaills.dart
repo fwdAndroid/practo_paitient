@@ -268,25 +268,6 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                           );
                         }),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Center(
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        child: ElevatedButton(
-                            onPressed: doctormakeAppointment,
-                            child: _isLoading == true
-                                ? const Center(
-                                    child: CircularProgressIndicator.adaptive(),
-                                  )
-                                : Text('Continue'),
-                            style: ElevatedButton.styleFrom(
-                                shape: StadiumBorder(),
-                                primary: Color(0xfff0092E1),
-                                fixedSize: Size(330, 50))),
-                      ),
-                    ),
-                  ),
                   SizedBox(
                     height: 20,
                   ),
@@ -333,6 +314,25 @@ class _PaitnetsDetailsState extends State<PaitnetsDetails> {
                             ),
                           );
                         }),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Center(
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: ElevatedButton(
+                            onPressed: doctormakeAppointment,
+                            child: _isLoading == true
+                                ? const Center(
+                                    child: CircularProgressIndicator.adaptive(),
+                                  )
+                                : Text('Continue'),
+                            style: ElevatedButton.styleFrom(
+                                shape: StadiumBorder(),
+                                primary: Color(0xfff0092E1),
+                                fixedSize: Size(330, 50))),
+                      ),
+                    ),
                   ),
                 ]);
           }),

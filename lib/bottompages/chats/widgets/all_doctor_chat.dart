@@ -76,9 +76,9 @@ class _AllDoctorChatState extends State<AllDoctorChat> {
                                     builder: (context) => DoctorChatRoom(
                                       doctorName:
                                           documentSnapshot['doctorName'],
-                                      paitientId: documentSnapshot['id'],
+                                      paitientid: documentSnapshot['id'],
                                       doctorId: documentSnapshot['doctorid'],
-                                      paitientName: documentSnapshot['name'],
+                                      paitientname: documentSnapshot['name'],
                                     ),
                                   ),
                                 );
