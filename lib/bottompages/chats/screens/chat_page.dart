@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:practo_paitient/bottompages/chat_appointments/doctor_chat_appointments.dart';
+import 'package:practo_paitient/bottompages/chat_appointments/hospital_chat_appointments.dart';
 import 'package:practo_paitient/bottompages/chats/widgets/all_doctor_chat.dart';
 
 import '../widgets/widgets.dart';
@@ -32,44 +33,26 @@ class _ChatPageState extends State<ChatPage> {
               height: 15,
             ),
             // ignore: prefer_const_constructors
-            StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("hospital_appointment")
-                    .doc("details")
-                    .collection("records")
-                    .snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  return Container(
-                    height: MediaQuery.of(context).size.height / 15,
-                    child: ListView.builder(itemBuilder: (context, index) {
-                      final DocumentSnapshot documentSnapshot =
-                          snapshot.data!.docs[index];
-                      return Container(
-                        margin: EdgeInsets.only(left: 20, right: 20),
-                        child: Card(
-                          elevation: 5,
-                          child: ListTile(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (builder) => AllHospitalChat(
-                                            hospitalid:
-                                                documentSnapshot['hospitalid'],
-                                          )));
-                            },
-                            // ignore: prefer_const_constructors
-                            leading: CircleAvatar(
-                              backgroundImage:
-                                  AssetImage("asset/hospital-building.png"),
-                            ),
-                            title: Text("Chat With Hospitals"),
-                          ),
-                        ),
-                      );
-                    }),
-                  );
-                }),
+            Container(
+              margin: EdgeInsets.only(left: 20, right: 20),
+              child: Card(
+                elevation: 5,
+                child: ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => HospitalChatAppointment()));
+                  },
+                  // ignore: prefer_const_constructors
+                  leading: CircleAvatar(
+                    backgroundImage: AssetImage("asset/hospital-building.png"),
+                  ),
+                  title: Text("Chat With Hospitals"),
+                ),
+              ),
+            ),
+
             SizedBox(
               height: 5,
             ),

@@ -1,21 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:practo_paitient/bottompages/chats/app_theme.dart';
+import 'package:practo_paitient/bottompages/chats/screens/chat_hospital_room.dart';
+import 'package:practo_paitient/bottompages/chats/screens/hospital_past_chat_room.dart';
 import 'package:uuid/uuid.dart';
 
-import '../screens/chat_hospital_room.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../app_theme.dart';
-
-class AllHospitalChat extends StatefulWidget {
+class HospitalPasChat extends StatefulWidget {
   final hospitalid;
-  AllHospitalChat({this.hospitalid});
+  HospitalPasChat({this.hospitalid});
   @override
-  State<AllHospitalChat> createState() => _AllHospitalChatState();
+  State<HospitalPasChat> createState() => _HospitalPasChatState();
 }
 
-class _AllHospitalChatState extends State<AllHospitalChat> {
+class _HospitalPasChatState extends State<HospitalPasChat> {
   @override
   Widget build(BuildContext context) {
     print(widget.hospitalid);
@@ -35,7 +35,7 @@ class _AllHospitalChatState extends State<AllHospitalChat> {
                       .collection("records")
                       .where("id",
                           isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                      .where("hospitalid", isEqualTo: widget.hospitalid)
+                      .where("status", isEqualTo: "complete")
                       // .where("hospitalid",
                       //     isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
 
@@ -62,7 +62,7 @@ class _AllHospitalChatState extends State<AllHospitalChat> {
                               onTap: () {
                                 Navigator.push(context,
                                     CupertinoPageRoute(builder: (context) {
-                                  return HospitalChatRoom(
+                                  return HospitalPastChatRoom(
                                     hospitalName:
                                         documentSnapshot['hospitalName'],
                                     paitientid: documentSnapshot['id'],
