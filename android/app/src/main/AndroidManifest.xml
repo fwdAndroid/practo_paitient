@@ -19,6 +19,7 @@
         android:label="practo_paitient"
         android:exported="true"
         android:name="${applicationName}"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -67,16 +68,7 @@
 </provider>
 
 <!-- declare customized Initializer -->
-<provider
-    android:name="vn.hunghd.flutterdownloader.FlutterDownloaderInitializer"
-    android:authorities="${applicationId}.flutter-downloader-init"
-    android:exported="false">
-    <!-- changes this number to configure the maximum number of concurrent tasks -->
-    <meta-data
-        android:name="vn.hunghd.flutterdownloader.MAX_CONCURRENT_TASKS"
-        android:value="5" />
-</provider>
-<!-- End FlutterDownloader customization -->
+
            
         <meta-data
             android:name="flutterEmbedding"
