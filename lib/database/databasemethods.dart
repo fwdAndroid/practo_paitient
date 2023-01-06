@@ -10,7 +10,6 @@ import 'package:practo_paitient/models/appointment_model.dart';
 import 'package:practo_paitient/models/doctor_appointment_model.dart';
 import 'package:practo_paitient/models/profile_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class DatabaseMethods {

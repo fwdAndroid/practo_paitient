@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:practo_paitient/bottom.dart';
 import 'package:practo_paitient/database/databasemethods.dart';
 import 'package:practo_paitient/doctors/appointment/medical_records.dart';
-import 'package:practo_paitient/payment/payment.dart';
 import 'package:practo_paitient/widgets/utils.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';

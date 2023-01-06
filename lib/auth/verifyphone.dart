@@ -7,7 +7,6 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:practo_paitient/bottom.dart';
 import 'package:practo_paitient/database/databasemethods.dart';
 import 'package:practo_paitient/profile/profile.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'continuephone.dart';
 
@@ -179,6 +178,4 @@ class _VerifyPhoneState extends State<VerifyPhone> {
     await DatabaseMethods().numberAdd();
     // .then((value) => Customdialog.closeDialog(context));
   }
-
-  
 }

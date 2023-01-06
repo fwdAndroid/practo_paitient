@@ -6,7 +6,6 @@ import 'package:practo_paitient/auth/verifyphone.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:practo_paitient/bottom.dart';
 import 'package:practo_paitient/database/databasemethods.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ContinuePhone extends StatefulWidget {
   const ContinuePhone({Key? key}) : super(key: key);
