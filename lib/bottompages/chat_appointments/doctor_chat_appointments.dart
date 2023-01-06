@@ -49,8 +49,8 @@ class _DoctorChatAppointmentState extends State<DoctorChatAppointment>
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          AllDoctorChat(doctorid: FirebaseAuth.instance.currentUser!.uid),
-          PastDoctor(doctorid: FirebaseAuth.instance.currentUser!.uid),
+          AllDoctorChat(),
+          PastDoctor(),
         ],
       ),
     );

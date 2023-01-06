@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "790596251090",
-    "project_id": "practo-a3748",
-    "storage_bucket": "practo-a3748.appspot.com"
+    "project_number": "845168107634",
+    "project_id": "practo-9b6f5",
+    "storage_bucket": "practo-9b6f5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:790596251090:android:86db26336244d52861ec0b",
+        "mobilesdk_app_id": "1:845168107634:android:a994b4ce991d6a570862eb",
         "android_client_info": {
-          "package_name": "com.example.practo_paitient"
+          "package_name": "com.practo.paitient"
         }
       },
       "oauth_client": [
         {
-          "client_id": "790596251090-bgqmi4vvhqmnugf4d2jaq6cnmqlb102f.apps.googleusercontent.com",
+          "client_id": "845168107634-p4qtdcq5d7gu7p7rp2qvrm3ak9881tka.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.practo_paitient",
+            "package_name": "com.practo.paitient",
             "certificate_hash": "d83acc58cfa6b6d03a8bdaf196c47cf2317a297d"
           }
         },
         {
-          "client_id": "790596251090-2eagdbme6rcbq1uoikvpa0948tbsd8pl.apps.googleusercontent.com",
+          "client_id": "845168107634-nfetcfl254f16tta53qseau728a91nfa.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD6YhfB6CfsUGfxySRqohwzsRcDntC7L6g"
+          "current_key": "AIzaSyD-C2Bb8Ogu1ejECSupcEcnbkaIeavJwKY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "790596251090-2eagdbme6rcbq1uoikvpa0948tbsd8pl.apps.googleusercontent.com",
+              "client_id": "845168107634-nfetcfl254f16tta53qseau728a91nfa.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

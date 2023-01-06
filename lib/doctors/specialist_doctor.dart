@@ -38,10 +38,10 @@ class _Specialist_DoctorState extends State<Specialist_Doctor> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (builder) => Doctor_Appointment(
+                          builder: (builder) => DoctorAppointment(
+                              id: data['uid'],
                               likes: data['likes'],
                               experience: data['experience'],
-                              id: data['uid'],
                               name: data['doctorName'],
                               specialization: data['doctorSpecialization'],
                               image: data['doctorPhotoURL'],

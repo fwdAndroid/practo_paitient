@@ -62,6 +62,8 @@ class _DoctorChatRoomState extends State<DoctorChatRoom> {
   String myStatus = "";
   @override
   Widget build(BuildContext context) {
+    print(widget.doctorId);
+    print(widget.paitientid);
     final fileName = file != null ? basename(file!.path) : 'No File Selected';
 
     return Scaffold(
@@ -501,7 +503,7 @@ class _DoctorChatRoomState extends State<DoctorChatRoom> {
         documentReference,
         {
           "senderId": FirebaseAuth.instance.currentUser!.uid,
-          "reciverId": widget.doctorId,
+          "receiverId": widget.doctorId,
           // "content": messageController.text,
           "time": DateTime.now(),
           'image': "",
@@ -570,7 +572,7 @@ class _DoctorChatRoomState extends State<DoctorChatRoom> {
           documentReference,
           {
             "senderId": FirebaseAuth.instance.currentUser!.uid,
-            "reciverId": widget.doctorId,
+            "receiverId": widget.doctorId,
             // "content": messageController.text,
             "time": DateTime.now(),
             'image': imageLink,

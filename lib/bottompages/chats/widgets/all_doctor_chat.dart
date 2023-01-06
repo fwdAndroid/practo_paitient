@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
 import '../app_theme.dart';
 
 class AllDoctorChat extends StatefulWidget {
-  final doctorid;
-  AllDoctorChat({required this.doctorid});
   @override
   State<AllDoctorChat> createState() => _AllDoctorChatState();
 }

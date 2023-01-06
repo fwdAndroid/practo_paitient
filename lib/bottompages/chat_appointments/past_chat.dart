@@ -9,8 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PastDoctor extends StatefulWidget {
-  final doctorid;
-  PastDoctor({required this.doctorid});
   @override
   State<PastDoctor> createState() => _PastDoctorState();
 }
