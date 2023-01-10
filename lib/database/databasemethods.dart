@@ -50,6 +50,7 @@ class DatabaseMethods {
     try {
       //Add User to the database with modal
       ProfileModel userModel = ProfileModel(
+        likes: [],
         dob: '',
         gender: '',
         name: '',
@@ -93,6 +94,7 @@ class DatabaseMethods {
         //Add User to the database with modal
 
         ProfileModel userModel = ProfileModel(
+          likes: [],
           dob: dob,
           gender: gender,
           name: name,

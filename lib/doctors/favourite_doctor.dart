@@ -32,10 +32,10 @@ class _FavouriteDoctorState extends State<FavouriteDoctor> {
         ),
         backgroundColor: Colors.white,
       ),
-      body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection("doctorsprofile").where(
-              'likes',
-              isEqualTo: [FirebaseAuth.instance.currentUser!.uid]).snapshots(),
+      body: FutureBuilder(
+          future: FirebaseFirestore.instance.collection("doctorsprofile").where(
+              "likes",
+              isEqualTo: [FirebaseAuth.instance.currentUser!.uid]).get(),
           builder: (context,
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
             return ListView.builder(

@@ -3,9 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:practo_paitient/doctors/appointment/paitent_detaills.dart';
 import 'package:practo_paitient/doctors/favourite_doctor.dart';
+import 'package:practo_paitient/widgets/like_animation.dart';
 
 class DoctorAppointment extends StatefulWidget {
   String id;
+  String patientid;
   String experience;
   final likes;
   String specialization;
@@ -19,6 +21,7 @@ class DoctorAppointment extends StatefulWidget {
       required this.specialization,
       this.images,
       required this.id,
+      required this.patientid,
       required this.address,
       required this.image,
       required this.experience,
@@ -33,6 +36,7 @@ class DoctorAppointment extends StatefulWidget {
 class _DoctorAppointmentState extends State<DoctorAppointment> {
   @override
   Widget build(BuildContext context) {
+    print(widget.patientid);
     print(widget.id);
     print(widget.experience);
     print(widget.address);
@@ -48,30 +52,66 @@ class _DoctorAppointmentState extends State<DoctorAppointment> {
           ),
           backgroundColor: Colors.white,
           actions: [
-            IconButton(
-              onPressed: () async {
-                await FirebaseFirestore.instance
-                    .collection("doctorsprofile")
-                    .doc(widget.id)
-                    .update({
-                  "likes": FieldValue.arrayUnion(
-                      [FirebaseAuth.instance.currentUser!.uid])
-                }).then((value) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (builder) => FavouriteDoctor(
-                                photorul: widget.image,
-                                doctorDescription: widget.description,
-                                doctorName: widget.name,
-                              )));
-                });
-              },
-              icon: Icon(
-                Icons.favorite_outline_outlined,
-                color: Colors.blue,
+            // IconButton(
+            //   onPressed: () async {
+            //     print(widget.patientid);
+            //     await FirebaseFirestore.instance
+            //         .collection("doctorsprofile")
+            //         .doc(widget.id)
+            //         .update({
+            //       "likes": FieldValue.arrayUnion([widget.patientid])
+            //     }).then((value) {
+            //       Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //               builder: (builder) => FavouriteDoctor(
+            //                     paiteintid: widget.patientid,
+            //                     photorul: widget.image,
+            //                     doctorDescription: widget.description,
+            //                     doctorName: widget.name,
+            //                   )));
+            //     });
+            //   },
+            //   icon: Icon(
+            //     Icons.favorite_outline_outlined,
+            //     color: Colors.blue,
+            //   ),
+            // )
+            LikeAnimation(
+              isAnimating:
+                  widget.likes.contains(FirebaseAuth.instance.currentUser!.uid),
+              smallLike: true,
+              child: IconButton(
+                onPressed: () async {
+                  print("liles");
+                  await FirebaseFirestore.instance
+                      .collection("doctorsprofile")
+                      .doc(widget.id)
+                      .update({
+                    "likes": FieldValue.arrayUnion(
+                        [FirebaseAuth.instance.currentUser!.uid])
+                  }).then((value) {
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (builder) => FavouriteDoctor(
+                    //               id: widget.id,
+                    //             )));
+                  });
+                  print("liles");
+                },
+                icon: widget.likes
+                        .contains(FirebaseAuth.instance.currentUser!.uid)
+                    ? Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                      )
+                    : Icon(
+                        Icons.favorite,
+                        color: Colors.black,
+                      ),
               ),
-            )
+            ),
           ]
           // IconButton(onPressed: (){}, child: Text("data"))
           // LikeAnimation(

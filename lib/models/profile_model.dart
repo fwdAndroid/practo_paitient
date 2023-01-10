@@ -9,8 +9,10 @@ class ProfileModel {
   String phoneNumber;
   String dob;
   String photoURL;
+  List<dynamic> likes;
 
   ProfileModel({
+    required this.likes,
     required this.uid,
     required this.gender,
     required this.email,
@@ -31,6 +33,7 @@ class ProfileModel {
         'gender': gender,
         'address': address,
         'dob': dob,
+        'likes': likes
       };
 
   ///
@@ -38,6 +41,7 @@ class ProfileModel {
     var snapshot = snaps.data() as Map<String, dynamic>;
 
     return ProfileModel(
+        likes: snapshot['likes'],
         gender: snapshot['gender'],
         name: snapshot['name'],
         uid: snapshot['uid'],

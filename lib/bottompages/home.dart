@@ -62,8 +62,12 @@ class _Home_ScreenState extends State<Home_Screen> {
             ),
             InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => FavouriteDoctor()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (builder) => FavouriteDoctor(
+                            //    id: FirebaseAuth.instance.currentUser!.uid,
+                            )));
               },
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
