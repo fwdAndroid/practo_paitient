@@ -91,12 +91,10 @@ class _DoctorAppointmentState extends State<DoctorAppointment> {
                     "likes": FieldValue.arrayUnion(
                         [FirebaseAuth.instance.currentUser!.uid])
                   }).then((value) {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (builder) => FavouriteDoctor(
-                    //               id: widget.id,
-                    //             )));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => FavouriteDoctor()));
                   });
                   print("liles");
                 },
